@@ -4,23 +4,13 @@
 # All Rights Reserved.
 # __END_LICENSE__
 
-"""
-This app may define some new parameters that can be modified in the
-Django settings module.  Let's say one such parameter is FOO.  The
-default value for FOO is defined in this file, like this:
+GEOCAM_AWARE_GALLERY_PAGE_COLS = 3
+GEOCAM_AWARE_GALLERY_PAGE_ROWS = 3
 
-  FOO = 'my default value'
+# GEOCAM_AWARE_MAP_BACKEND possible values: 'earth', 'maps', 'none'.
+GEOCAM_AWARE_MAP_BACKEND = 'maps'
 
-If the admin for the site doesn't like the default value, they can
-override it in the site-level settings module, like this:
+# enable/disable clustering of markers (if supported by the current GEOCAM_AWARE_MAP_BACKEND)
+GEOCAM_AWARE_USE_MARKER_CLUSTERING = False
 
-  FOO = 'a better value'
-
-Other modules can access the value of FOO like this:
-
-  from geocamAware import settings
-  print settings.FOO
-
-Don't try to get the value of FOO from django.conf.settings.  That
-settings object will not know about the default value!
-"""
+GEOCAM_AWARE_USE_TRACKING = False

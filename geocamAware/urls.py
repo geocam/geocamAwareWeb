@@ -6,6 +6,13 @@
 
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('',
-    url(r'^$', 'views.index', name='index'),
-)
+from geocamAware import views
+
+urlpatterns = patterns(
+    '',
+
+    # main
+    (r'^setVars(?:\?[^/]*)?$', views.setVars, {'readOnly': True}),
+    (r'^$', views.main, {'readOnly': True}),
+
+    )

@@ -6,10 +6,6 @@
 
 from django.test import TestCase
 
-
-class geocamAwareTest(TestCase):
-    """
-    Tests for geocamAwareWeb
-    """
-    def test_geocamAware(self):
-        pass
+#class SomeTest(TestCase):
+#    def test_blah(self):
+#        pass
