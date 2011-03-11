@@ -202,6 +202,14 @@ geocamAware.Feature = new Class(
         
         caption += '</table>\n';
         return caption;
+    },
+
+    getViewerUrl: function () {
+        return this.viewerUrl;
+    },
+
+    getEditUrl: function () {
+        return this.editUrl;
     }
 
 });

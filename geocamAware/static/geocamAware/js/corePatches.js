@@ -16,27 +16,3 @@ geocamAware.getDirUrl = function (feature) {
     ret += "/" + feature.version + "/";
     return ret;
 }
-
-geocamAware.Feature.prototype.getViewerUrl = function () {
-    var name = this.name;
-    if (name == "") {
-        if (this.subtype == "Photo") {
-            name = "untitled.jpg";
-        } else if (this.subtype == "Track") {
-            name = "untitled.json";
-        } else {
-            name = "untitled";
-        }
-    }
-    return geocamAware.settings.SCRIPT_NAME + "geocamLens/" + this.subtype.toLowerCase() + "/" + this.localId + "/" + name;
-}
-
-geocamAware.Feature.prototype.getEditUrl = function (widget) {
-    var verb;
-    if (widget) {
-        verb = 'editWidget';
-    } else {
-        verb = 'edit'
-    }
-    return geocamAware.settings.SCRIPT_NAME + "geocamLens/" + verb + '/' + this.subtype.toLowerCase() + "/" + this.uuid + "/";
-}
