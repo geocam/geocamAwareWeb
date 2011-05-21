@@ -46,7 +46,8 @@ def main(request):
                               dict(query=request.session.get('q', ''),
                                    viewport=request.session.get('v', ''),
                                    accountWidget=accountWidget,
-                                   exportSettings=getExportSettings()),
+                                   exportSettings=getExportSettings(),
+                                   settings=settings),
                               context_instance=RequestContext(request))
 
 def setVars(request):
