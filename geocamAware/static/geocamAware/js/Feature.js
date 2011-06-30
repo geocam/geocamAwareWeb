@@ -55,7 +55,7 @@ geocamAware.Feature = new Class(
             + '  </a></div>\n'
     },
 
-    getEditLinkHtml: function () {
+    getEditLinkgetMarker: function () {
         return ''
             + '  <div style="margin-top: 10px;">\n'
             + '    <a id="featureEditLink" href="' + this.getEditUrl() + '" target="_blank">\n'
@@ -65,7 +65,10 @@ geocamAware.Feature = new Class(
     },
 
     getDetailLinksHtml: function () {
+        /*
         return this.getFullResLinkHtml() + this.getEditLinkHtml();
+        */
+        return this.getFullResLinkHtml();
     },
 
     getBalloonHtml: function () {

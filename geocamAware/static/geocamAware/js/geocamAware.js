@@ -203,8 +203,13 @@ var geocamAware = {
         var numInViewport = filteredFeatures.inViewport.length;
         var numNoPosition = filteredFeatures.inViewportOrNoPosition.length - numInViewport;
         var numFeaturesWithPosition = numFeatures - numNoPosition;
+        
+        /*
         fhtml = numInViewport + ' of '
-	    + numFeaturesWithPosition + ' features in map view';
+	    + numFeaturesWithPosition + ' features in view';
+	    */
+	    
+	    fhtml = 'Showing ' + numInViewport + ' features';
         $('#featuresOutOfView').html(fhtml);
         
         geocamAware.notifyFeaturesInMapViewport(visibleFeatures);
@@ -393,7 +398,7 @@ var geocamAware = {
         if (geocamAware.highlightedFeatureUuid == uuid) {
             // do nothing
         } else {
-            geocamAware.clearHighlightedFeature();
+           // geocamAware.clearHighlightedFeature();
             var feature = geocamAware.featuresByUuidG[uuid];
             $(geocamAware).trigger("highlightFeature", [feature]);
             geocamAware.highlightedFeatureUuid = uuid;
@@ -420,6 +425,11 @@ var geocamAware = {
             geocamAware.selectedFeatureUuid = uuid;
             
             geocamAware.viewIndexUuidG = uuid;
+            
+            // Trying to make the ballon pop up
+            console.log("here?");
+            geocamAware.mapG.showBalloonForFeature(feature);
+            geocamAware.mapG.unhighlightFeature(feature);
         }
     },
 

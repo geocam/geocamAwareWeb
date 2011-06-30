@@ -10,10 +10,13 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from geocamUtil.auth import getAccountWidget
 from geocamUtil import anyjson as json
 from geocamUtil.middleware.SecurityMiddleware import requestIsSecure
 
 from geocamAware import settings
+
+selectedApp = settings.GEOCAM_AWARE_APP_NAME
 
 def getExportSettings():
     exportedVars = ['SCRIPT_NAME',
@@ -31,24 +34,18 @@ def getExportSettings():
     return json.dumps(exportDict)
 
 def main(request):
-    if request.user.is_authenticated():
-        accountWidget = ('<b>%(username)s</b> <a href="%(SCRIPT_NAME)saccounts/logout/">logout</a>'
-                         % dict(username=request.user.username,
-                                SCRIPT_NAME=settings.SCRIPT_NAME))
-    else:
-        path = request.get_full_path()
-        if not requestIsSecure(request):
-            path += '?protocol=http' # redirect back to http after login
-        accountWidget = ('<b>guest</b> <a href="%(SCRIPT_NAME)saccounts/login/?next=%(path)s">login</a>'
-                         % dict(SCRIPT_NAME=settings.SCRIPT_NAME,
-                                path=urllib.quote(path)))
-    return render_to_response('main.html',
-                              dict(query=request.session.get('q', ''),
-                                   viewport=request.session.get('v', ''),
-                                   accountWidget=accountWidget,
-                                   exportSettings=getExportSettings()),
-                              context_instance=RequestContext(request))
-
+    accountWidget = getAccountWidget(request)
+    return render_to_response('main1.html',
+                                dict(
+                                    query=request.session.get('q', ''),
+                                    viewport=request.session.get('v', ''),
+                                    accountWidget=accountWidget,
+                                    exportSettings=getExportSettings(),
+                                    selectedApp=settings.GEOCAM_AWARE_APP_NAME,
+                                    ),
+                                context_instance=RequestContext(request)
+                            )
+                              
 def setVars(request):
     for var in ('v', 'q'):
         if var in request.GET:
