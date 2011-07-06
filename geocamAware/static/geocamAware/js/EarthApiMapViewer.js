@@ -56,7 +56,7 @@ geocamAware.EarthApiMapViewer = new Class(
             
             $.each(diff.featuresToAdd,
                    function (i, feature) {
-                       var kml = geocamAware.wrapKml(geocamAware.getFeatureKml(feature));
+                       var kml = geocamAware.wrapKml(feature.getKml());
                        var geFeature = self.ge.parseKml(kml);
                        self.allFeaturesFolder.getFeatures().appendChild(geFeature);
                        feature.mapObject = geFeature;
@@ -67,7 +67,8 @@ geocamAware.EarthApiMapViewer = new Class(
         
         if (diff.featuresToDelete.length > 0 || diff.featuresToAdd.length > 0) {
             //self.zoomToFit();
-            geocamAware.setGalleryToVisibleSubsetOf(geocamAware.featuresG);
+            //geocamAware.setGalleryToVisibleSubsetOf(geocamAware.featuresG);
+            geocamAware.handleMapViewChange();
         }
     },
     
