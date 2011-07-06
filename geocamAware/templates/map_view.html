@@ -1,8 +1,7 @@
-{% extends "base1.html" %}
+{% extends "base2.html" %}
 
 {% block scripts %}
-    {{ block.super }}
-
+    
     {% ifequal settings.GEOCAM_AWARE_MAP_BACKEND "earth" %}
         <script src="{{ MEDIA_URL }}external/js/geo-pack.js" type="text/javascript"></script>
         <script src="{{ MEDIA_URL }}external/js/extensions-pack.js" type="text/javascript"></script>
@@ -15,7 +14,7 @@
             <script src="{{ MEDIA_URL }}external/markerclusterer_compiled.js" type="text/javascript"></script>
         {% endif %}
     {% endifequal %}
-
+    
     <script src="{{ MEDIA_URL }}external/js/jquery.form.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}external/js/timeUtils.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}geocamAware/js/geocamAware.js" type="text/javascript"></script>
@@ -36,17 +35,15 @@
     <script src="{{ MEDIA_URL }}geocamAware/js/Track.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}geocamAware/js/Image.js" type="text/javascript"></script>
     
-    {% block extraScripts %}
     <script src="{{ MEDIA_URL }}external/js/usng.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}geocamAware/js/Photo.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}geocamAware/js/corePatches.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}geocamTrack/js/geocamTrack.js" type="text/javascript"></script>
-    {% endblock %}
-
+    
     {% if query %}
-    <script src="{{ settings.SCRIPT_NAME }}geocamLens/featuresJson.js?q={{ query|urlencode }}&forceReload={% now "ymdHis" %}" type="text/javascript"></script>
+        <script src="{{ settings.SCRIPT_NAME }}geocamLens/featuresJson.js?q={{ query|urlencode }}&forceReload={% now "ymdHis" %}" type="text/javascript"></script>
     {% else %}
-    <script src="{{ settings.SCRIPT_NAME }}geocamLens/featuresJson.js?forceReload={% now "ymdHis" %}" type="text/javascript"></script>
+        <script src="{{ settings.SCRIPT_NAME }}geocamLens/featuresJson.js?forceReload={% now "ymdHis" %}" type="text/javascript"></script>
     {% endif %}
     
 {% endblock %}
@@ -67,5 +64,11 @@
 {% endblock %}
 
 {% block contents %}
-    {% include "mapPane1.html" %}
+    <div id="mapwrapper">
+        <div id="mapcontrols">
+            <span class="linkButton" onclick="javascript:geocamAware.mapG.zoomToFit()">Zoom to fit</span> -
+            <span id="featuresOutOfView"></span>
+        </div>
+        <div id="mapContainer"></div>
+    </div>
 {% endblock %}

@@ -10,13 +10,11 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from geocamUtil.auth import getAccountWidget
+from geocamUtil.auth import get_account_widget
 from geocamUtil import anyjson as json
 from geocamUtil.middleware.SecurityMiddleware import requestIsSecure
 
 from geocamAware import settings
-
-selectedApp = settings.GEOCAM_AWARE_APP_NAME
 
 def getExportSettings():
     exportedVars = ['SCRIPT_NAME',
@@ -33,21 +31,35 @@ def getExportSettings():
                        for f in exportedVars))
     return json.dumps(exportDict)
 
-def main(request):
-    accountWidget = getAccountWidget(request)
-    return render_to_response('main1.html',
-                                dict(
-                                    query=request.session.get('q', ''),
-                                    viewport=request.session.get('v', ''),
-                                    accountWidget=accountWidget,
-                                    exportSettings=getExportSettings(),
-                                    selectedApp=settings.GEOCAM_AWARE_APP_NAME,
-                                    ),
-                                context_instance=RequestContext(request)
-                            )
-                              
+
 def setVars(request):
     for var in ('v', 'q'):
         if var in request.GET:
             request.session[var] = request.GET[var]
     return HttpResponse('ok')
+
+
+def render_aware_view(request, view):
+    return render_to_response(view,
+                                dict(
+                                    query=request.session.get('q', ''),
+                                    viewport=request.session.get('v', ''),
+                                    account_widget=get_account_widget(request),
+                                    exportSettings=getExportSettings(),
+                                    ),
+                                context_instance=RequestContext(request)
+                            )
+
+
+def map(request):
+    return render_aware_view(request, 'map_view.html')
+
+
+def list(request):
+    return render_aware_view(request, 'list_view.html')    
+
+
+def gallery(request):
+    return render_aware_view(request, 'gallery_view.html')
+
+
