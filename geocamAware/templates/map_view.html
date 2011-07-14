@@ -64,11 +64,11 @@
 {% endblock %}
 
 {% block contents %}
-    <div id="mapwrapper">
+    <div id="mapwrapper" style="height:100%; width:100%;">
         <div id="mapcontrols">
             <span class="linkButton" onclick="javascript:geocamAware.mapG.zoomToFit()">Zoom to fit</span> -
             <span id="featuresOutOfView"></span>
         </div>
-        <div id="mapContainer"></div>
+        <div id="mapContainer" style="height:100%; width:100%;"></div>
     </div>
 {% endblock %}
