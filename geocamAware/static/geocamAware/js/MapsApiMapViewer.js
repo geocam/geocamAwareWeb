@@ -184,7 +184,6 @@ geocamAware.MapsApiMapViewer = new Class(
     initializeMarkers: function (feature) {
         var self = this;
         
-        var iconUrl = feature.getIconMapUrl();
         feature.mapObject = {normal: self.getMarker(feature, false),
                              highlight: self.getMarker(feature, true)};
         
