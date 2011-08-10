@@ -427,7 +427,6 @@ var geocamAware = {
             geocamAware.viewIndexUuidG = uuid;
             
             // Trying to make the ballon pop up
-            console.log("here?");
             geocamAware.mapG.showBalloonForFeature(feature);
             geocamAware.mapG.unhighlightFeature(feature);
         }
@@ -459,6 +458,24 @@ var geocamAware = {
 
     setToFeatureEdit: function () {
         $(geocamAware).trigger("setToFeatureEdit", arguments);
+    }
+
+    /* Interfaces for handling user input */
+    goToAddress: function(address) {
+        geocamAware.mapG.goToAddress(address);
+    },
+    
+    goToCurrentLocation: function() {
+        geocamAware.mapG.goToCurrentLocation();
+    },
+    
+    goToQuery: function(query) {
+        geocamAware.reloadFeatures(query);
+        geocamAware.mapG.zoomToFit();
+    },
+    
+    dropPin: function() {
+        geocamAware.mapG.dropPin();
     }
 
 };

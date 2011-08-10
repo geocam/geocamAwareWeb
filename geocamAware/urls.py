@@ -15,6 +15,6 @@ urlpatterns = patterns(
     (r'^setVars(?:\?[^/]*)?$', views.setVars, {'readOnly': True}),
     (r'^$', views.map, {'readOnly': True}),
     (r'^map/', views.map, {'readOnly': True}),
-    (r'^list/', views.list, {'readOnly': True}),
+    (r'^list(?:\?[^/]*)?$', views.list, {'readOnly': True}),
     (r'^gallery/', views.gallery, {'readOnly': True}),
 )

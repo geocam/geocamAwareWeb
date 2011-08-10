@@ -1,5 +1,335 @@
-{% extends "base2.html" %}
+{% extends "aware_base.html" %}
 
-{% block contents %}
-    List
+{% block aware %}
+    <script type="text/javascript" charset="utf-8">    
+        var geocamAware = {
+            
+            ready:false,
+            featuresG: [],
+            newFeaturesG: null,
+            geocoder: null,
+            
+            init: function() { 
+               // geocamAware.geocoder = new google.maps.Geocoder();
+            },
+            
+            setSessionVars: function (varMap) {
+                var url = geocamAware.settings.SCRIPT_NAME + 'geocamAware/setVars';
+                var sep = '?';
+                $.each(varMap,
+                       function (key, val) {
+                           url += sep + key + '=' + escape(val);
+                           sep = '&';
+                       });
+                $.get(url);
+            },
+            
+            setToReady: function() {
+                geocamAware.ready  = true;
+                geocamAware.setViewIfReady();
+            },
+            
+            handleListViewChange: function() { },
+            
+            showError: function (shortMessage, longMessage) {
+                $('#errorMessage').html('<span style="background-color: #ff7; padding: 0.7em; padding-top: 0.3em; padding-bottom: 0.3em;">' + shortMessage + ' <a href="." id="clearError" style="margin-left: 0.5em;">ok</span></span>');
+                $('#clearError').click(function () {
+                    $('#errorMessage').html('')
+                    return false;
+                });
+
+                $(geocamAware).trigger('error', [shortMessage, longMessage]);
+            },
+            
+            uuidMap: function (features) {
+                var result = {};
+                $.each(features,
+                       function (i, feature) {
+                           result[feature.uuid] = feature;
+                       });
+                return result;
+            },
+            
+            reloadFeatures: function (query) {
+                var url = geocamAware.settings.SCRIPT_NAME + "geocamLens/features.json";
+                if (query != null) {
+                    url += '?q=' + escape(query);
+                }
+                $.getJSON(url, geocamAware.handleNewFeatures);
+
+                return false;
+            },
+            
+            diffFeatures: function (oldFeatures, newFeatures) {
+                $.each(oldFeatures,
+                       function (i, feature) {
+                           feature.keep = false;
+                       });
+
+                var oldFeaturesByUuid = geocamAware.uuidMap(oldFeatures);
+
+                var diff = {};
+                diff.featuresToAdd = [];
+                $.each(newFeatures,
+                       function (i, feature) {
+                           var matchingOldFeature = oldFeaturesByUuid[feature.uuid];
+                           if (matchingOldFeature == null || matchingOldFeature.version != feature.version) {
+                               diff.featuresToAdd.push(feature);
+                           } else {
+                               matchingOldFeature.keep = true;
+                               if (matchingOldFeature.mapObject != undefined) {
+                                   feature.mapObject = matchingOldFeature.mapObject;
+                               }
+                           }
+                       });
+
+                diff.featuresToDelete = [];
+                $.each(oldFeatures,
+                       function (i, feature) {
+                           if (!feature.keep) {
+                               diff.featuresToDelete.push(feature);
+                           }
+                       });
+
+                return diff;
+            },
+            
+            parseFeature: function (feature) {
+                // note: destructive
+                
+                feature.properties.uuid = feature.id;
+                if (feature.geometry.type == "Point") {
+                    var coords = feature.geometry.coordinates;
+                    feature.properties.longitude = coords[0];
+                    feature.properties.latitude = coords[1];
+                } else {
+                    var bbox = feature.bbox;
+                    var dims = feature.bbox.length / 2;
+                    feature.properties.minLon = bbox[0];
+                    feature.properties.minLat = bbox[1];
+                    feature.properties.maxLon = bbox[dims];
+                    feature.properties.maxLat = bbox[dims+1];
+                }
+                feature.properties.geometry = feature.geometry;
+                result = new geocamAware[feature.properties.subtype](feature.properties);
+                return result;
+            },
+            
+            setView: function(oldFeatures, newFeatures) {
+                var diff = geocamAware.diffFeatures(oldFeatures, newFeatures);
+                geocamAware.updateFeatures(newFeatures, diff);
+                geocamAware.handleListViewChange();
+            },
+            
+            setViewIfReady: function() {
+                if(geocamAware.ready) {
+                    var oldFeatures = geocamAware.featuresG;
+                    geocamAware.featuresG = geocamAware.newFeaturesG;
+                    geocamAware.featuresByUuidG = geocamAware.uuidMap(geocamAware.featuresG);
+                    geocamAware.newFeaturesG = null;
+        	        geocamAware.setView(oldFeatures, geocamAware.featuresG);
+                }
+            },
+            
+            handleNewFeatures:function(response) {
+                if (response.error == null) {
+                    var jsonFeatures = response.result.features;
+                    var parsedFeatures = [];
+                    
+                    $.each(jsonFeatures, function (i, feature) {
+                            parsedFeatures.push(geocamAware.parseFeature(feature));
+                    });
+                    
+                    geocamAware.newFeaturesG = parsedFeatures;
+                    geocamAware.setViewIfReady();
+                    
+                } else {
+                    geocamAware.showError('invalid search query', response.error.message);
+                }
+            },
+            
+            updateFeatures: function (newFeatures, diff) {
+                $(geocamAware).trigger("updateFeatures", arguments);
+            },
+        
+            /* Interfaces for handling user input */
+            goToCurrentLocation: function() {
+                if(navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(location) {
+                            //Lat location.coords.latitude + ',' + 
+                            //Lng location.coords.longitude;
+                        }
+                    );
+                }
+            },
+            
+            goToAddress: function(address) {
+                geocamAware.geocoder.geocode(
+                    { 'address':address },
+                    function(results, status) {
+                        if(status == google.maps.GeocoderStatus.OK) {
+                            //Lat  results[0].geometry.location.Na + ',' + 
+                            //Lng results[0].geometry.location.Oa
+                        }
+                    }
+                );
+            },
+            
+            goToQuery: function(query) {
+                geocamAware.reloadFeatures(query);
+            },
+            
+            dropPin: function() {
+                alert('You can not drop a pin on a list. Sorry.');
+            }
+        };
+        
+        var listManager = {
+            list: '#data_table',
+            ready:false,
+            row_count:0,
+            
+            init:function() {
+                if($('#data_table').length > 0) {
+                    listManager.ready
+                }
+            },
+            
+            showError: function (shortMessage, longMessage) {
+                $('#errorMessage').html('<span style="background-color: #ff7; padding: 0.7em; padding-top: 0.3em; padding-bottom: 0.3em;">' + shortMessage + ' <a href="." id="clearError" style="margin-left: 0.5em;">ok</span></span>');
+                $('#clearError').click(function () {
+                    $('#errorMessage').html('')
+                    return false;
+                });
+
+                $(geocamAware).trigger('error', [shortMessage, longMessage]);
+            },
+            
+            addCell:function(featureUuid, contents, width) {
+                var row = listManager.getFeatureRow(featureUuid);
+                
+                var cell = document.createElement("td");
+                $(cell).append(contents);
+                
+                if(width != null) {
+                    cell.width = width;
+                }
+                
+                cell.style.valign = "top";
+                
+                row.appendChild(cell);
+                
+                return true;
+            },
+            
+            addRow:function(featureUuid) {
+                var table = document.getElementById("data_table");
+                
+                var r = document.createElement("tr");
+                r.id = "row_" + featureUuid;
+                
+                table.appendChild(r);
+                
+                return (listManager.row_count++);
+            },
+            
+            getFeatureRow:function(featureUuid) {
+                return document.getElementById("row_"+featureUuid);
+            },
+                        
+            featureExists:function(featureUuid) {
+                var id = "#row_" + featureUuid;
+                return ($(id).length > 0);
+            },
+            
+            hideFeature:function(featureUuid) {
+                var id = "#row_" + featureUuid;
+                $(id).hide();
+            },
+            
+            showFeature:function(featureUuid) {
+                var id = "#row_" + featureUuid;
+                $(id).show();
+            },
+            
+            createFeature:function(feature) {
+                // Create Row for Feature
+                console.log(feature);
+                listManager.addRow(feature.uuid);
+                
+                //var width = $('#content').width() * 0.3;
+                var width = 200;
+                var img_cell = '<img src=\"'+feature.viewerUrl+'\" width="'+width+'" />';
+                
+                //listManager.addCell(feature.uuid, img_cell, $('#content').width() * 0.35);
+                listManager.addCell(feature.uuid, img_cell, 220);
+                
+                var contents = '<div style="min-height:150px;">';
+                contents += '<h4 style="margin:0; padding:0;">'+feature.notes+'</h4>';
+                contents += '<div>Uploaded: '+feature.timestamp+'</div>';
+                
+                var tags = "";
+                $.each(feature.tags, function(i, tag){
+                    tags += "#" + tag + " ";
+                });
+                
+                if(tags.length == 0) {
+                    tags = "No tags assigned";
+                }
+                
+                contents += '<div>Tags: ' + tags + '</div>';
+                contents += '<div>Coordinates: ' + feature.latitude + ', ' + feature.longitude + '</div>';
+                contents += '<div>Heading: ' + feature.yaw + '&deg;</div>';
+                contents += '<div><a href="' + feature.viewerUrl + '">Full Resolution Image</a></div>';
+                contents += '</div>';
+                
+                listManager.addCell(feature.uuid, contents, null);
+            },
+            
+            removeFeatures:function(featuresToDelete) {
+                $.each(featuresToDelete, function(i, feature){
+                    if(listManager.featureExists(feature.uuid)) {
+                        listManager.hideFeature(feature.uuid);
+                    }
+                });
+            },
+            
+            addFeatures:function(featuresToAdd) {
+                $.each(featuresToAdd, function(i, feature){
+                    if(listManager.featureExists(feature.uuid)) {
+                        listManager.showFeature(feature.uuid);
+                    }
+                    else {
+                        listManager.createFeature(feature);
+                    }
+                });
+            },
+            
+            draw:function(newFeatures, diff) {
+              if(diff.featuresToDelete.length > 0) {
+                  listManager.removeFeatures(diff.featuresToDelete);
+              }
+              
+              if(diff.featuresToAdd.length > 0) {
+                  listManager.addFeatures(diff.featuresToAdd);
+              }
+              
+             $('#featuresOutOfView').text('Showing ' + $('#data_table > tr:visible').length + ' features');
+            },
+        };
+        
+        $(geocamAware).bind("updateFeatures", function(event, newFeatures, diff){
+            listManager.draw(newFeatures, diff);
+        });
+
+        $(document).ready(function(){
+            geocamAware.init();
+            geocamAware.setToReady();
+        });
+    </script>
+{% endblock %}
+
+{% block view %}
+    <table id="data_table" class="geocam_table" style="valign:top;" border="0" cellspacing="0" cellpadding="0"></table>
 {% endblock %}

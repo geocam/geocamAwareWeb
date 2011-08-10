@@ -16,6 +16,8 @@ geocamAware.MapsApiMapViewer = new Class(
     
     gmap: null,
     
+    geocoder:null,
+    
     mainListenerInitialized: false,
     
     balloon: null,
@@ -48,6 +50,8 @@ geocamAware.MapsApiMapViewer = new Class(
         geocamAware.bindEvent(geocamAware, this, "unhighlightFeature");
         geocamAware.bindEvent(geocamAware, this, "selectFeature");
         geocamAware.bindEvent(geocamAware, this, "updateFeatures");
+
+        this.geocoder = new google.maps.Geocoder();
 
         this.isReady = true;
         
@@ -149,6 +153,52 @@ geocamAware.MapsApiMapViewer = new Class(
         }
     },
     
+    goToCurrentLocation: function() {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(location) {
+                var location_str = location.coords.latitude + ',' + location.coords.longitude + ',20';
+                geocamAware.mapG.setViewport(location_str);
+            });
+        }
+    },
+    
+    goToAddress: function(address) {
+        this.geocoder.geocode(
+            { 'address':address },
+            function(results, status) {
+                console.log(results);
+                if(status == google.maps.GeocoderStatus.OK) {
+                    var location_str = results[0].geometry.location.Na + ',' + results[0].geometry.location.Oa + ',15';
+                    geocamAware.mapG.setViewport(location_str);
+                }
+            }
+        );
+    },
+    
+    dropPin: function() {
+        var center = this.gmap.getCenter();
+        
+        this.geocoder.geocode(
+            { 'latLng':center },
+            function(results, status) {
+                if(status == google.maps.GeocoderStatus.OK) {
+                    if(results[1]) {
+                        var infowindow = new google.maps.InfoWindow();
+                        
+                        marker = new google.maps.Marker({
+                            position: center,
+                            map: geocamAware.mapG.gmap
+                        });
+                        
+                        infowindow.setContent(results[1].formatted_address);
+                        infowindow.open(geocamAware.mapG.gmap, marker);
+                    }
+                }
+            }
+        );
+        
+    },
+    
     /**********************************************************************
      * helper functions
      **********************************************************************/
@@ -170,7 +220,15 @@ geocamAware.MapsApiMapViewer = new Class(
     
     featureIntersectsBounds: function (feature, bounds) {
         if (feature.latitude != null) {
-            return bounds.contains(new google.maps.LatLng(feature.latitude, feature.longitude));
+            
+            // Need to make sure that the bounds are set
+            if(typeof(bounds) != "undefined") {
+                return bounds.contains(new google.maps.LatLng(feature.latitude, feature.longitude));
+            }
+            else {
+                return false;
+            }
+            
         } else if (feature.minLat != null) {
             var ibounds = new google.maps.LatLngBounds();
             ibounds.extend(new google.maps.LatLng(feature.minLat, feature.minLon));

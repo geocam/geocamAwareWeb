@@ -41,8 +41,11 @@ geocamAware.Feature = new Class(
 	    + '  />'
             + '  <img\n'
             + '    src="' + this.getThumbnailUrl(w0) + '"\n'
+            /*
             + '    width="' + thumbSize[0] + '"\n'
             + '    height="' + thumbSize[1] + '"\n'
+            */
+            + '     width="200"'
             + '    border="0"'
             + '  />\n'
             + '</a>\n';
