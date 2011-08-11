@@ -4,6 +4,8 @@
 // All Rights Reserved.
 // __END_LICENSE__
 
+var NIGHTTIME = 'nightvision';
+
 geocamAware.MapsApiMapViewer = new Class(
 {
     Extends: geocamAware.MapViewer,
@@ -29,13 +31,103 @@ geocamAware.MapsApiMapViewer = new Class(
      **********************************************************************/
     
     initialize: function(domId) {
-        //var latlng = new google.maps.LatLng(37, -120);
+        
+        // Create the standard Google Map
         var myOptions = {
-            /*zoom: 4,
-              center: latlng,*/
-            mapTypeId: google.maps.MapTypeId.HYBRID
+            mapTypeIds: [
+                google.maps.MapTypeId.HYBRID,
+                NIGHTTIME
+            ]
         };
+        
         this.gmap = new google.maps.Map(document.getElementById(domId), myOptions);
+        
+        // Specify the styling for the nighttime map
+        var stylez = [
+            {
+                featureType:"water",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" },
+                    { lightness:"-50" }
+                ]
+            },
+            {
+                featureType:"administrative",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" },
+                    { lightness:"-100" }
+                ]
+            },
+            {
+                featureType:"landscape",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" },
+                    { lightness:"-100" }
+                ]
+            },
+            {
+                featureType:"poi",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" },
+                    { lightness:"-100" }
+                ]
+            },
+            {
+                featureType:"road.arterial",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" }
+                ]
+            },
+            {
+                featureType:"road.highway",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" }
+                ]
+            },
+            {
+                featureType:"road.local",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" }
+                ]
+            },
+            {
+                featureType:"transit",
+                elementType:"all",
+                stylers: [
+                    { hue:"#000000" },
+                    { saturation:"100" }
+                ]
+            }
+        ];
+        
+        // Create the actual Styled Map
+        var nightVisionMap = new google.maps.StyledMapType(stylez, { name:"Night Vision" });
+        this.gmap.mapTypes.set(NIGHTTIME, nightVisionMap);
+        
+        // Check to see what mode we're in, then assign the proper map type
+        if($('body').hasClass('daytime')) {
+            this.gmap.setMapTypeId(google.maps.MapTypeId.HYBRID);
+        }
+        else {
+            this.gmap.setMapTypeId(NIGHTTIME);
+        }
+        
+        // Need to check for daytime or nighttime mode here, set accordingly
+        
         if (geocamAware.viewportG != "") {
             this.setViewport(geocamAware.viewportG);
             this.boundsAreSet = true;
@@ -158,6 +250,7 @@ geocamAware.MapsApiMapViewer = new Class(
             navigator.geolocation.getCurrentPosition(function(location) {
                 var location_str = location.coords.latitude + ',' + location.coords.longitude + ',20';
                 geocamAware.mapG.setViewport(location_str);
+                geocamAware.mapG.dropPinForAction(location.coords.latitude, location.coords.longitude);
             });
         }
     },
@@ -170,9 +263,34 @@ geocamAware.MapsApiMapViewer = new Class(
                 if(status == google.maps.GeocoderStatus.OK) {
                     var location_str = results[0].geometry.location.Na + ',' + results[0].geometry.location.Oa + ',15';
                     geocamAware.mapG.setViewport(location_str);
+                    geocamAware.mapG.dropPinForAction(results[0].geometry.location.Na, results[0].geometry.location.Oa);
                 }
             }
         );
+    },
+    
+    dropPinForAction: function(lat, lng) {
+        center = new google.maps.LatLng(lat, lng);
+        
+        this.geocoder.geocode(
+            { 'latLng':center },
+            function(results, status) {
+                if(status == google.maps.GeocoderStatus.OK) {
+                    if(results[1]) {
+                        var infowindow = new google.maps.InfoWindow();
+                        
+                        marker = new google.maps.Marker({
+                            position: center,
+                            map: geocamAware.mapG.gmap
+                        });
+                        
+                        infowindow.setContent(results[1].formatted_address);
+                        infowindow.open(geocamAware.mapG.gmap, marker);
+                    }
+                }
+            }
+        );
+        
     },
     
     dropPin: function() {
@@ -197,6 +315,27 @@ geocamAware.MapsApiMapViewer = new Class(
             }
         );
         
+    },
+    
+    setMapType: function(type) {
+        geocamAware.mapG.gmap.setMapTypeId(type);
+    },
+    
+    setMapTypeToDaytime: function() {
+        geocamAware.mapG.setMapType(google.maps.MapTypeId.HYBRID);
+    },
+    
+    setMapTypeToNighttime: function() {
+        geocamAware.mapG.setMapType(NIGHTTIME);
+    },
+    
+    toggleMapType: function() {
+        if(geocamAware.mapG.gmap.mapTypeId == google.maps.MapTypeId.HYBRID) {
+            geocamAware.mapG.setMapTypeToNighttime();
+        }
+        else {
+            geocamAware.mapG.setMapTypeToDaytime();
+        }
     },
     
     /**********************************************************************
@@ -391,7 +530,6 @@ geocamAware.MapsApiMapViewer = new Class(
             this.mainListenerInitialized = true;
         }
     }
-    
 });
 
 geocamAware.MapsApiMapViewer.factory = function (domId) {

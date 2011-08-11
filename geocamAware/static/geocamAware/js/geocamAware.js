@@ -476,6 +476,18 @@ var geocamAware = {
     
     dropPin: function() {
         geocamAware.mapG.dropPin();
+    },
+    
+    setMapTypeToNightTime: function() {
+        geocamAware.mapG.setMapTypeToNightTime();
+    },
+    
+    setMapTypeToDayTime: function() {
+        geocamAware.mapG.setMapTypeToDayTime();
+    },
+    
+    toggleMapType: function() {
+        geocamAware.mapG.toggleMapType();
     }
 
 };
