@@ -53,6 +53,7 @@ def render_aware_view(request, view, additional_vars=None):
         viewport=request.session.get('v', ''),
         account_widget=get_account_widget(request),
         exportSettings=getExportSettings(),
+        settings=settings,
     )
     
     if additional_vars != None:
