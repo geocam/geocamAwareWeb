@@ -47,7 +47,8 @@ def main(request):
                                    viewport=request.session.get('v', ''),
                                    accountWidget=accountWidget,
                                    exportSettings=getExportSettings(),
-                                   settings=settings),
+                                   settings=settings,
+                                   navigation_tab=settings.GEOCAM_AWARE_NAVIGATION_TAB),
                               context_instance=RequestContext(request))
 
 def setVars(request):

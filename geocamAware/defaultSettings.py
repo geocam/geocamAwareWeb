@@ -14,3 +14,6 @@ GEOCAM_AWARE_MAP_BACKEND = 'maps'
 GEOCAM_AWARE_USE_MARKER_CLUSTERING = False
 
 GEOCAM_AWARE_USE_TRACKING = False
+
+# this can be used to specify a string in your template to indicate a navigation tab.  It is not required.
+GEOCAM_AWARE_NAVIGATION_TAB = 'mytabname'
