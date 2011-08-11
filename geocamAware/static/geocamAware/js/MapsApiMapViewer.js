@@ -34,10 +34,12 @@ geocamAware.MapsApiMapViewer = new Class(
         
         // Create the standard Google Map
         var myOptions = {
-            mapTypeIds: [
-                google.maps.MapTypeId.HYBRID,
-                NIGHTTIME
-            ]
+            mapTypeControlOptions: {
+                mapTypeIds: [
+                    google.maps.MapTypeId.HYBRID,
+                    NIGHTTIME
+                ]
+            }
         };
         
         this.gmap = new google.maps.Map(document.getElementById(domId), myOptions);
@@ -259,7 +261,6 @@ geocamAware.MapsApiMapViewer = new Class(
         this.geocoder.geocode(
             { 'address':address },
             function(results, status) {
-                console.log(results);
                 if(status == google.maps.GeocoderStatus.OK) {
                     var location_str = results[0].geometry.location.Na + ',' + results[0].geometry.location.Oa + ',15';
                     geocamAware.mapG.setViewport(location_str);
@@ -329,12 +330,14 @@ geocamAware.MapsApiMapViewer = new Class(
         geocamAware.mapG.setMapType(NIGHTTIME);
     },
     
+    // IMPORTANT NOTE: This will align the map with the current view mode! 
+    // It will not toggle willy nilly!
     toggleMapType: function() {
-        if(geocamAware.mapG.gmap.mapTypeId == google.maps.MapTypeId.HYBRID) {
-            geocamAware.mapG.setMapTypeToNighttime();
+        if($('body').hasClass('daytime')) {
+            geocamAware.mapG.setMapTypeToDaytime();
         }
         else {
-            geocamAware.mapG.setMapTypeToDaytime();
+             geocamAware.mapG.setMapTypeToNighttime();
         }
     },
     

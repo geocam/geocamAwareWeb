@@ -95,6 +95,11 @@
             $('#query').val('Enter Query');
         };
         
+        clear_address = function() {
+            $('#address_form').toggle();
+            $('#address').val('Enter Address');
+        };
+        
         /* Interface to drop pin */
         drop_pin = function() {
             toggle_menu();
@@ -128,7 +133,8 @@
                             <input type="text" name="address" id="address" onfocus="if(this.value == 'Enter Address'){this.value='';}" onblur="if(this.value == ''){this.value='Enter Address';}" value="Enter Address">
                         </td>
                         <td valign="middle">
-                            <a href="javascript:void();" onclick="go_to_address();" class="big_awesome_button">Go To</a>
+                            <a href="javascript:void();" onclick="go_to_address();" class="small_awesome_button">Go To</a>
+                            <a href="javascript:void();" onclick="clear_address();" class="small_awesome_button">Clear</a>
                         </td>
                     </tr>
                 </table>
