@@ -12,7 +12,7 @@ urlpatterns = patterns(
     '',
 
     # main
-    (r'^setVars(?:\?[^/]*)?$', views.setVars, {'readOnly': True}),
-    (r'^$', views.main, {'readOnly': True}),
+    (r'^setVars(?:\?[^/]*)?$', views.setVars, {'readOnly': True}, "geocamAware_setVars"),
+    (r'^$', views.main, {'readOnly': True}, "geocamAware_main"),
 
     )
