@@ -458,7 +458,7 @@ var geocamAware = {
 
     setToFeatureEdit: function () {
         $(geocamAware).trigger("setToFeatureEdit", arguments);
-    }
+    },
 
     /* Interfaces for handling user input */
     goToAddress: function(address) {
