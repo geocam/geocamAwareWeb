@@ -75,11 +75,18 @@ geocamAware.MapsApiMapViewer = new Class(
             },
             {
                 featureType:"poi",
-                elementType:"all",
+                elementType:"geometry",
                 stylers: [
                     { hue:"#000000" },
                     { saturation:"100" },
                     { lightness:"-100" }
+                ]
+            },
+            {
+                featureType:"poi",
+                elementType:"labels",
+                stylers: [
+                    { visibility:"off" },
                 ]
             },
             {
@@ -128,16 +135,13 @@ geocamAware.MapsApiMapViewer = new Class(
             this.gmap.setMapTypeId(NIGHTTIME);
         }
         
-        // Need to check for daytime or nighttime mode here, set accordingly
-        
         if (geocamAware.viewportG != "") {
             this.setViewport(geocamAware.viewportG);
             this.boundsAreSet = true;
         }
 
         if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
-            this.markerClusterer = new MarkerClusterer(this.gmap, [],
-                                                       {gridSize: 25});
+            this.markerClusterer = new MarkerClusterer(this.gmap, [], { gridSize: 25 });
         }
 
         geocamAware.bindEvent(geocamAware, this, "highlightFeature");
@@ -249,11 +253,19 @@ geocamAware.MapsApiMapViewer = new Class(
     
     goToCurrentLocation: function() {
         if(navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(location) {
-                var location_str = location.coords.latitude + ',' + location.coords.longitude + ',20';
-                geocamAware.mapG.setViewport(location_str);
-                geocamAware.mapG.dropPinForAction(location.coords.latitude, location.coords.longitude);
-            });
+            navigator.geolocation.getCurrentPosition(
+                function(location) {
+                    var location_str = location.coords.latitude + ',' + location.coords.longitude + ',20';
+                
+                    geocamAware.mapG.setViewport(location_str);
+                
+                    geocamAware.mapG.dropPinForAction(
+                        location.coords.latitude, 
+                        location.coords.longitude, 
+                        null
+                    );
+                }
+            );
         }
     },
     
@@ -263,14 +275,20 @@ geocamAware.MapsApiMapViewer = new Class(
             function(results, status) {
                 if(status == google.maps.GeocoderStatus.OK) {
                     var location_str = results[0].geometry.location.Na + ',' + results[0].geometry.location.Oa + ',15';
+                    
                     geocamAware.mapG.setViewport(location_str);
-                    geocamAware.mapG.dropPinForAction(results[0].geometry.location.Na, results[0].geometry.location.Oa);
+                    
+                    geocamAware.mapG.dropPinForAction(
+                        results[0].geometry.location.Na,    // Latitude
+                        results[0].geometry.location.Oa,    // Longitude
+                        address                             // Label
+                    );                       
                 }
             }
         );
     },
     
-    dropPinForAction: function(lat, lng) {
+    dropPinForAction: function(lat, lng, label) {
         center = new google.maps.LatLng(lat, lng);
         
         this.geocoder.geocode(
@@ -278,20 +296,30 @@ geocamAware.MapsApiMapViewer = new Class(
             function(results, status) {
                 if(status == google.maps.GeocoderStatus.OK) {
                     if(results[1]) {
-                        var infowindow = new google.maps.InfoWindow();
                         
                         marker = new google.maps.Marker({
                             position: center,
                             map: geocamAware.mapG.gmap
                         });
                         
-                        infowindow.setContent(results[1].formatted_address);
+                        if(label == null) {
+                            label = results[1].formatted_address;
+                        }
+                        
+                        var infowindow = new google.maps.InfoWindow();
+                        infowindow.setContent(label);
                         infowindow.open(geocamAware.mapG.gmap, marker);
+                        
+                        google.maps.event.addListener(marker, 'click', function() {
+                              infowindow.open(geocamAware.mapG.gmap, marker);
+                        });
+                        
+                        // Save the marker to the cookie so that we can get them later
+                        geocamAware.mapG.rememberMarker(center.lat(), center.lng(), label);
                     }
                 }
             }
         );
-        
     },
     
     dropPin: function() {
@@ -316,6 +344,49 @@ geocamAware.MapsApiMapViewer = new Class(
             }
         );
         
+    },
+    
+    rememberMarker: function(lat, lng, label) {
+        var markers = get_datum('markers');
+        
+        if(markers == null) {
+            markers = [];
+        }
+        else {
+            markers = JSON.parse(markers);
+        }
+        
+        markers.push({
+            label:label,
+            lat:lat,
+            lng:lng
+        });
+        
+        remember_datum('markers', JSON.stringify(markers));
+    },
+    
+    loadMarkers: function() {
+        var markers = get_datum('markers');
+        
+        if(markers != null) {
+            markers = JSON.parse(markers);
+            
+            for(var i = 0; i < markers.length; i++) {
+                m = markers[i];
+                
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(m.lat, m.lng),
+                    map: geocamAware.mapG.gmap
+                });
+                                
+                var infowindow = new google.maps.InfoWindow();
+                infowindow.setContent(m.label);
+                
+                google.maps.event.addListener(marker, 'click', function() {
+                      infowindow.open(geocamAware.mapG.gmap, marker);
+                });
+            }
+        }
     },
     
     setMapType: function(type) {
@@ -344,6 +415,10 @@ geocamAware.MapsApiMapViewer = new Class(
     /**********************************************************************
      * helper functions
      **********************************************************************/
+    
+    getCenter: function() {
+        return this.gmap.getCenter();
+    },
     
     removeFeatureFromMap: function (feature) {
         var self = this;

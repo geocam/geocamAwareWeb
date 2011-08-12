@@ -74,6 +74,12 @@
             geocamAware.goToAddress(address);
         };
         
+        /* Resets the address var and form */
+        clear_address = function() {
+            $('#address_form').toggle();
+            $('#address').val('Enter Address');
+        };
+        
         /* Displays the search box for querying features */
         show_query_search_box = function() {
             toggle_menu();
@@ -88,16 +94,10 @@
         
         /* Resets the query session var and form, returning to the top of the feature set */
         clear_query = function() {
-            geocamAware.setSessionVars({'q': ''});
             geocamAware.goToQuery(null);
             
             $('#query_form').toggle();
             $('#query').val('Enter Query');
-        };
-        
-        clear_address = function() {
-            $('#address_form').toggle();
-            $('#address').val('Enter Address');
         };
         
         /* Interface to drop pin */

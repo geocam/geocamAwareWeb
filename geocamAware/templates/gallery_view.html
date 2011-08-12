@@ -177,6 +177,13 @@
             },
             
             goToQuery: function(query) {
+                // Check to see if we're resetting the data set
+                if(query == null) { query = ''; }
+
+                // Save the query to the session
+                geocamAware.setSessionVars({'q': query});
+
+                // Go get features
                 geocamAware.reloadFeatures(query);
             },
         

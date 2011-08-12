@@ -139,6 +139,9 @@ var geocamAware = {
             searchBox.css('color', '#000');
         }
         geocamAware.setViewIfReady();
+        
+        geocamAware.mapG.loadMarkers();
+        
         // set up menus
         //$(function() { $('#jd_menu').jdMenu(); });
     },
@@ -254,19 +257,24 @@ var geocamAware = {
         if (geocamAware.mapG.boundsAreSet) {
             geocamAware.setSessionVars({'v': geocamAware.mapG.getViewport()});
         }
-	geocamAware.checkFeaturesInMapViewport(geocamAware.featuresG);
+	    
+	    geocamAware.checkFeaturesInMapViewport(geocamAware.featuresG);
     },
 
     handleMapViewChange: function () {
         // this is a guarding wrapper around handleMapViewChange0(), which does the real work
 
         if (geocamAware.mapViewChangeTimeoutG != null) {
-	    // avoid handling the same move many times -- clear the old timeout first
-	    clearTimeout(geocamAware.mapViewChangeTimeoutG);
+	        // avoid handling the same move many times -- clear the old timeout first
+	        clearTimeout(geocamAware.mapViewChangeTimeoutG);
         }
-        geocamAware.mapViewChangeTimeoutG = setTimeout(function () {
-            geocamAware.handleMapViewChange0();
-	}, 250);
+        
+        geocamAware.mapViewChangeTimeoutG = setTimeout(
+            function () {
+                geocamAware.handleMapViewChange0();
+	        }, 
+	        250
+	    );
     },
     
     featureListsEqual: function (a, b) {
@@ -375,10 +383,14 @@ var geocamAware = {
 
         if (geocamAware.mapG != null && geocamAware.mapG.isReady && geocamAware.newFeaturesG != null) {
             var oldFeatures = geocamAware.featuresG;
+            
             geocamAware.featuresG = geocamAware.newFeaturesG;
+            
             geocamAware.featuresByUuidG = geocamAware.uuidMap(geocamAware.featuresG);
+            
             geocamAware.newFeaturesG = null;
-	    geocamAware.setView(oldFeatures, geocamAware.featuresG);
+	        
+	        geocamAware.setView(oldFeatures, geocamAware.featuresG);
         }
     },
 
@@ -470,8 +482,29 @@ var geocamAware = {
     },
     
     goToQuery: function(query) {
+        
+        // Check to see if we're resetting the data set
+        if(query == null) { 
+            geocamAware.setSessionVars({'q':''});
+        }
+        else {
+            geocamAware.setSessionVars({'q':query});
+        }
+
+        // Go get features
         geocamAware.reloadFeatures(query);
+        
+        // Zoom the map to fit the data
         geocamAware.mapG.zoomToFit();
+        
+        if(query != null) {
+            // Create the label and get the center of our results
+            label = 'Search Results for "' + query + '"';
+            center = geocamAware.mapG.getCenter();
+
+            // Drop pin to identifiy the search results
+            geocamAware.mapG.dropPinForAction(center.lat(), center.lng(), label);
+        }
     },
     
     dropPin: function() {
@@ -489,5 +522,4 @@ var geocamAware = {
     toggleMapType: function() {
         geocamAware.mapG.toggleMapType();
     }
-
 };

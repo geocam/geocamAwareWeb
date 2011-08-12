@@ -46,7 +46,10 @@ def render_aware_view(request, view, additional_vars=None):
     
     q = request.GET.get('q', None)    
     if q == None:
-        q = request.session.get('q', '')
+        q = request.session.get('q', None)
+    
+    if q != None:
+        request.session['q'] = q
     
     data = dict(
         query=q,
@@ -67,6 +70,7 @@ def render_aware_view(request, view, additional_vars=None):
 def map(request):
     
     menu_items = (
+        '<div onclick="show_query_search_box();"><a href="javascript:void()">Search For Images</a></div>',
         '<div onclick="go_to_current_location();"><a href="javascript:void()">Go to My Location</a></div>',
         '<div onclick="show_address_search_box();"><a href="javascript:void();">Go to Address</a></div>',
         '<div onclick="drop_pin();"><a href="javascript:void();">Drop Pin</a></div>'
