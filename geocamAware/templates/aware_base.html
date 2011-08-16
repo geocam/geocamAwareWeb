@@ -57,55 +57,64 @@
     <script type="text/javascript" charset="utf-8">
         
         /* Handles updating the view to display features near the users current location */
-        go_to_current_location = function() {
+        function go_to_current_location() {
             toggle_menu();
             geocamAware.goToCurrentLocation();
-        };
+        }
         
         /* Displays the search box for going to address */
-        show_address_search_box = function() {
+        function show_address_search_box() {
             toggle_menu();
             $('#address_form').toggle();
-        };
+        }
     
         /* Handles updating the view to display features near the given address */
-        go_to_address = function() {
+        function go_to_address(f) {
             var address = $('#address').val();
             geocamAware.goToAddress(address);
-        };
+            return false;
+        }
         
         /* Resets the address var and form */
-        clear_address = function() {
+        function clear_address() {
             $('#address_form').toggle();
             $('#address').val('Enter Address');
-        };
+        }
         
         /* Displays the search box for querying features */
-        show_query_search_box = function() {
+        function show_query_search_box() {
             toggle_menu();
             $('#query_form').toggle();
-        };
+        }
         
         /* Handles the actually querying of features */
-        go_to_query = function() {
+        function go_to_query(f) {
             var query = $('#query').val();
             geocamAware.goToQuery(query);
-        };
+            return false;
+        }
         
         /* Resets the query session var and form, returning to the top of the feature set */
-        clear_query = function() {
+        function clear_query() {
             geocamAware.goToQuery(null);
             
             $('#query_form').toggle();
             $('#query').val('Enter Query');
-        };
+        }
         
         /* Interface to drop pin */
-        drop_pin = function() {
+        function drop_pin() {
             toggle_menu();
             geocamAware.dropPin();
-        };
+        }
         
+        toggle_details = function(feature) {
+            $('#block').toggle();
+            $('#info_panel').toggle();
+            $('#featuresOutOfView').toggle();
+            
+            $('#info_panel_content').text("Hello");
+        }
     </script>
 {% endblock %}
 
@@ -127,34 +136,45 @@
         <div id="awarecontrols">
             <span id="featuresOutOfView"></span>
             <div id="address_form" style="display:none;">
-                <table class="geocam_table" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td width="90%">
-                            <input type="text" name="address" id="address" onfocus="if(this.value == 'Enter Address'){this.value='';}" onblur="if(this.value == ''){this.value='Enter Address';}" value="Enter Address">
-                        </td>
-                        <td valign="middle">
-                            <a href="javascript:void();" onclick="go_to_address();" class="small_awesome_button">Go To</a>
-                            <a href="javascript:void();" onclick="clear_address();" class="small_awesome_button">Clear</a>
-                        </td>
-                    </tr>
-                </table>
+                <form onsubmit="return go_to_address(this);">
+                    <table class="geocam_table" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="90%">
+                                <input type="text" name="address" id="address" onfocus="if(this.value == 'Enter Address'){this.value='';}" onblur="if(this.value == ''){this.value='Enter Address';}" value="Enter Address">
+                            </td>
+                            <td valign="middle">
+                                <a href="javascript:void();" onclick="go_to_address();" class="small_awesome_button">Go To</a>
+                                <a href="javascript:void();" onclick="clear_address();" class="small_awesome_button">Clear</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
-            <div id="query_form" {% if query == "" %}style="display:none;"{% endif %}>
-                <table class="geocam_table" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td width="90%">
-                            <input type="text" name="query" id="query" onfocus="if(this.value == 'Enter Query'){this.value='';}" onblur="if(this.value == ''){this.value='Enter Query';}" value="{% if query %}{{ query|safe }}{% else %}Enter Query{% endif %}">
-                        </td>
-                        <td valign="middle">
-                            <a href="javascript:void();" onclick="go_to_query();" class="small_awesome_button">Search</a> 
-                            <a href="javascript:void();" onclick="clear_query();" class="small_awesome_button">Clear</a>
-                        </td>
-                    </tr>
-                </table>
+            <div id="query_form" {% if query == "" or query == None %}style="display:none;"{% endif %}>
+                <form onsubmit="return go_to_query(this);">
+                    <table class="geocam_table" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="90%">
+                                <input type="text" name="query" id="query" onfocus="if(this.value == 'Enter Query'){this.value='';}" onblur="if(this.value == ''){this.value='Enter Query';}" value="{% if query %}{{ query|safe }}{% else %}Enter Query{% endif %}">
+                            </td>
+                            <td valign="middle">
+                                <a href="javascript:void();" onclick="go_to_query();" class="small_awesome_button">Search</a> 
+                                <a href="javascript:void();" onclick="clear_query();" class="small_awesome_button">Clear</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
         </div>
     {% endblock %}
     
-    {% block view %}
-    {% endblock %}
+    <div id="block" style="height:100%; width:100%;">
+        {% block view %}
+        {% endblock %}
+    </div>
+    
+    <div id="info_panel" style="display:none;">
+        <div id="info_panel_content"></div>
+        <a href="javascript:void();" onclick="toggle_details();" class="big_awesome_button">Back</a>
+    </div>
 {% endblock %}
