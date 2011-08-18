@@ -41,7 +41,8 @@ geocamAware.MapsApiMapViewer = new Class(
 
         if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
             this.markerClusterer = new MarkerClusterer(this.gmap, [],
-                                                       {gridSize: 10});
+                                                       {"gridSize": 25,
+                                                        "maxZoom": 15});
         }
 
         geocamAware.bindEvent(geocamAware, this, "highlightFeature");
