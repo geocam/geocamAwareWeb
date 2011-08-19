@@ -64,7 +64,7 @@ geocamAware.GalleryWidget = new Class(
     },
     
     getNumPages: function (numFeatures) {
-        const pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
+        var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
         return Math.ceil(numFeatures / pageSize);
     },
 
@@ -102,7 +102,7 @@ geocamAware.GalleryWidget = new Class(
         // get the page that this feature appears on among the
         // visible features -- we use this to set the page before
         // we try to highlight the feature in the gallery
-        const pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
+        var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
         return Math.floor(feature.visibleIndex / pageSize) + 1;
     },
 
@@ -132,7 +132,7 @@ geocamAware.GalleryWidget = new Class(
             $("#geocamAware_gallery").html(this.getGalleryHtml(visibleFeatures, pageNum));
             
             // set gallery listeners
-            const pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
+            var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
             for (var j=0; j < pageSize; j++) {
                 var i = (pageNum-1)*pageSize + j;
                 if (i < visibleFeatures.length) {

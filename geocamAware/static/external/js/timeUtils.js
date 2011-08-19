@@ -204,7 +204,7 @@ function getNowInTimestampLocalTime(timestamp) {
     var now = new Date();
     // convert now from browser local time to timestamp local time
     // (using '- -' because '+' gives string concatenation, ugh.)
-    now.setTime(now - -60000 * (now.getTimezoneOffset() + timestamp.utcoffset));
+    now.setTime(now - (-60000) * (now.getTimezoneOffset() + timestamp.utcoffset));
     now.utcoffset = timestamp.utcoffset;
     return now;
 }
