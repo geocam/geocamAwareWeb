@@ -8,3 +8,5 @@
 # http://pip.openplans.org/requirement-format.html
 
 # Django already installed for geocamCore
+
+slimit
