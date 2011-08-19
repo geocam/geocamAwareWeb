@@ -81,11 +81,11 @@ def main(request):
                          % dict(SCRIPT_NAME=settings.SCRIPT_NAME,
                                 path=urllib.quote(path)))
 
-    if settings.GEOCAM_AWARE_DEBUG_JAVASCRIPT:
-        loadJsModules = ''.join([loadScript(settings.MEDIA_URL + path)
-                                 for path in JS_MODULES])
-    else:
+    if settings.MINIFY_JAVASCRIPT:
         loadJsModules = loadScript(settings.MEDIA_URL + 'geocamAware/js/geocamAwareMin.js')
+    else:
+        loadJsModules = '\n'.join([loadScript(settings.MEDIA_URL + path)
+                                   for path, doMinify in JS_MODULES])
         
     return render_to_response('main.html',
                               dict(query=request.session.get('q', ''),

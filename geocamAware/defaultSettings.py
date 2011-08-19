@@ -18,8 +18,9 @@ GEOCAM_AWARE_USE_MARKER_CLUSTERING = False
 # enable/disable tracks display from geocamTrack (bit of a hack, this should be user controlled)
 GEOCAM_AWARE_USE_TRACKING = False
 
-# if true, don't use minifier to combine/compress javascript, which makes it harder to debug
-GEOCAM_AWARE_DEBUG_JAVASCRIPT = False
+# minifying and combining javascript files improves page load times
+# but you may want to turn it off for debugging
+MINIFY_JAVASCRIPT = True
 
 # this can be used to specify a string in your template to indicate a navigation tab.  It is not required.
 GEOCAM_AWARE_NAVIGATION_TAB = 'mytabname'
