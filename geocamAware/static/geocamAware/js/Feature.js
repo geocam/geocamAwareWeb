@@ -84,7 +84,7 @@ geocamAware.Feature = new Class(
         var tw = galThumbSize[0];
         var th = galThumbSize[1];
         return "<td"
-	    + " id=\"" + this.uuid + "\""
+	    + " id=\"galleryTd_" + this.uuid + "\""
 	    + " style=\""
 	    + " vertical-align: top;"
 	    + " width: " + (w0+10) + "px;"
@@ -94,12 +94,11 @@ geocamAware.Feature = new Class(
 	    + " padding: 0px 0px 0px 0px;"
 	    + "\">"
 	    + "<div"
+            + " id=\"galleryDiv_" + this.uuid + "\""
+            + " class=\"geocamAwareGalleryDiv\""
 	    + " style=\""
 	    + " width: " + tw + "px;"
 	    + " height: " + th + "px;"
-	    + " margin: 0px 0px 0px 0px;"
-	    + " border: 0px 0px 0px 0px;"
-	    + " padding: 5px 5px 5px 5px;"
 	    + "\">"
 	    + "<img"
 	    + " src=\"" + this.getIconGalleryUrl()  + "\""

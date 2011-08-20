@@ -51,14 +51,14 @@ geocamAware.GalleryWidget = new Class(
 
     highlightFeature: function (feature) {
         this.renderPage(geocamAware.visibleFeaturesG, this.getFeaturePage(feature, geocamAware.visibleFeaturesG));
-        $("td#" + feature.uuid + " div").css({backgroundColor: 'red'});
+        $("#galleryDiv_" + feature.uuid).addClass("highlighted");
 	
         // add the rest of the preview data
         $("#geocamAware_galleryCaption").html(feature.getCaptionHtml());
     },
     
     unhighlightFeature: function (feature) {
-        $("td#" + feature.uuid + " div").css({backgroundColor: ''});
+        $("#galleryDiv_" + feature.uuid).removeClass("highlighted");
 	
         $("#geocamAware_galleryCaption").html('');
     },
@@ -117,6 +117,13 @@ geocamAware.GalleryWidget = new Class(
     },
 
     renderPage: function (visibleFeatures, pageNum) {
+        if (pageNum != this.currentPageNum) {
+            this.doRenderPage(visibleFeatures, pageNum);
+            this.currentPageNum = pageNum;
+        }
+    },
+
+    doRenderPage: function (visibleFeatures, pageNum) {
         if (visibleFeatures.length == 0) {
             if (geocamAware.featuresG.length == 0) {
                 if (geocamAware.queryG == "") {
@@ -137,19 +144,39 @@ geocamAware.GalleryWidget = new Class(
                 var i = (pageNum-1)*pageSize + j;
                 if (i < visibleFeatures.length) {
                     var feature = visibleFeatures[i];
-                    $("td#" + feature.uuid).hover(
-                        function(uuid) {
-                            return function() {
-                                geocamAware.setHighlightedFeature(uuid);
-                            }
-                        }(feature.uuid),
-                        function(uuid) {
-                            return function() {
-                                geocamAware.clearHighlightedFeature();
-                            }
-                        }(feature.uuid)
-                    );
-                    $("td#" + feature.uuid).click(
+                    var td = $("#galleryTd_" + feature.uuid);
+                    if (0) {
+                        td.hover(
+                            function(uuid) {
+                                return function() {
+                                    geocamAware.setHighlightedFeature(uuid);
+                                }
+                            }(feature.uuid),
+                            function(uuid) {
+                                return function() {
+                                    geocamAware.clearHighlightedFeature();
+                                }
+                            }(feature.uuid)
+                        );
+                    } else {
+                        td.mouseover(
+                            function (uuid) {
+                                return function(evt) {
+                                    geocamAware.setHighlightedFeature(uuid);
+                                    evt.stopPropagation();
+                                }
+                            }(feature.uuid)
+                        );
+                        td.mouseout(
+                            function (uuid) {
+                                return function(evt) {
+                                    geocamAware.clearHighlightedFeature();
+                                    evt.stopPropagation();
+                                }
+                            }(feature.uuid)
+                        );
+                    }
+                    td.click(
                         function(uuid) {
                             return function() {
                                 geocamAware.setSelectedFeature(uuid);

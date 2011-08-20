@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block cssExtras %}
+   <link href="{{ MEDIA_URL }}geocamAware/css/geocamAware.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
 {% block scripts %}
   {% ifequal settings.GEOCAM_AWARE_MAP_BACKEND "earth" %}
     <script src="http://google.com/jsapi?key={{ settings.GOOGLE_MAPS_API_KEY }}" type="text/javascript"></script>
@@ -46,9 +50,11 @@
         <span style="float: right; font-weight: normal; padding-right: 3px;">{{ accountWidget|safe }}</span>
       </td>
       <td>
-        <form style="display: inline" onsubmit="return geocamAware.runSearch($('#searchBox').val());">
-          <input id="searchBox" type="text" value="Search" style="color: #999; font-size: 1em; width: 470px;" onfocus="if (this.value == 'Search') { this.value = ''; this.style.color = '#000'; }" onblur="if (this.value == '') { this.value = 'Search'; this.style.color = '#999'; }"/>
-          <input type="submit"  style="float: center; vertical-align: middle;" value="Go"/>
+        <form style="display: inline" onsubmit="return geocamAware.runSearch($('#searchBox').val());" action="javascript:void()">
+          <div>
+            <input id="searchBox" type="text" value="Search" style="color: #999; font-size: 1em; width: 470px;" onfocus="if (this.value == 'Search') { this.value = ''; this.style.color = '#000'; }" onblur="if (this.value == '') { this.value = 'Search'; this.style.color = '#999'; }"/>
+            <input type="submit"  style="float: center; vertical-align: middle;" value="Go"/>
+          </div>
         </form>
       </td>
     </tr>
