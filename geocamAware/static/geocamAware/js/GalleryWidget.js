@@ -145,37 +145,18 @@ geocamAware.GalleryWidget = new Class(
                 if (i < visibleFeatures.length) {
                     var feature = visibleFeatures[i];
                     var td = $("#galleryTd_" + feature.uuid);
-                    if (0) {
-                        td.hover(
-                            function(uuid) {
-                                return function() {
-                                    geocamAware.setHighlightedFeature(uuid);
-                                }
-                            }(feature.uuid),
-                            function(uuid) {
-                                return function() {
-                                    geocamAware.clearHighlightedFeature();
-                                }
-                            }(feature.uuid)
-                        );
-                    } else {
-                        td.mouseover(
-                            function (uuid) {
-                                return function(evt) {
-                                    geocamAware.setHighlightedFeature(uuid);
-                                    evt.stopPropagation();
-                                }
-                            }(feature.uuid)
-                        );
-                        td.mouseout(
-                            function (uuid) {
-                                return function(evt) {
-                                    geocamAware.clearHighlightedFeature();
-                                    evt.stopPropagation();
-                                }
-                            }(feature.uuid)
-                        );
-                    }
+                    td.hover(
+                        function(uuid) {
+                            return function() {
+                                geocamAware.setHighlightedFeature(uuid);
+                            }
+                        }(feature.uuid),
+                        function(uuid) {
+                            return function() {
+                                geocamAware.clearHighlightedFeature();
+                            }
+                        }(feature.uuid)
+                    );
                     td.click(
                         function(uuid) {
                             return function() {
