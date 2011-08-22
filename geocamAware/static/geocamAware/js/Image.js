@@ -9,7 +9,7 @@ geocamAware.Image = new Class(
     Extends: geocamAware.PointFeature,
 
     getThumbnailUrl: function (width) {
-        return geocamAware.getDirUrl(this) + "th" + width + ".jpg";
+        return geocamAware.getDirUrl(this) + "th" + width + ".jpg?version=" + this.version;
     },
 
     getSizePixels: function () {
