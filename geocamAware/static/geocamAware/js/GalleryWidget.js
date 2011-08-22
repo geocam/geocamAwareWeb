@@ -31,11 +31,16 @@ geocamAware.GalleryWidget = new Class(
         geocamAware.bindEvent(geocamAware, this, "highlightFeature");
         geocamAware.bindEvent(geocamAware, this, "unhighlightFeature");
         geocamAware.bindEvent(geocamAware, this, "notifyLoading");
+        geocamAware.bindEvent(geocamAware, this, "notifySearchComplete");
         geocamAware.bindEvent(geocamAware, this, "notifyFeaturesInMapViewport");
     },
 
     notifyLoading: function () {
         $("#geocamAware_gallery").html(geocamAware.getPendingStatusHtml('Searching...'));
+    },
+
+    notifySearchComplete: function () {
+        this.notifyFeaturesInMapViewport(geocamAware.visibleFeaturesG);
     },
 
     notifyFeaturesInMapViewport: function (visibleFeatures) {
@@ -50,7 +55,7 @@ geocamAware.GalleryWidget = new Class(
     },
 
     highlightFeature: function (feature) {
-        this.renderPage(geocamAware.visibleFeaturesG, this.getFeaturePage(feature, geocamAware.visibleFeaturesG));
+        this.setPage(this.getFeaturePage(feature, geocamAware.visibleFeaturesG));
         $("#galleryDiv_" + feature.uuid).addClass("highlighted");
 	
         // add the rest of the preview data
@@ -117,13 +122,6 @@ geocamAware.GalleryWidget = new Class(
     },
 
     renderPage: function (visibleFeatures, pageNum) {
-        if (pageNum != this.currentPageNum) {
-            this.doRenderPage(visibleFeatures, pageNum);
-            this.currentPageNum = pageNum;
-        }
-    },
-
-    doRenderPage: function (visibleFeatures, pageNum) {
         if (visibleFeatures.length == 0) {
             if (geocamAware.featuresG.length == 0) {
                 if (geocamAware.queryG == "") {

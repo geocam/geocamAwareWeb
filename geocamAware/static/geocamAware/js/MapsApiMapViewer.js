@@ -42,7 +42,8 @@ geocamAware.MapsApiMapViewer = new Class(
         if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
             this.markerClusterer = new MarkerClusterer(this.gmap, [],
                                                        {"gridSize": 25,
-                                                        "maxZoom": 15});
+                                                        "maxZoom": 19
+                                                       });
         }
 
         geocamAware.bindEvent(geocamAware, this, "highlightFeature");
@@ -69,7 +70,7 @@ geocamAware.MapsApiMapViewer = new Class(
                 $.each(newFeatures,
                        function (i, feature) {
                            self.initializeMarkers(feature);
-                           markersToAdd.push(feature.mapObject);
+                           markersToAdd.push(feature.normalMarker);
                        });
                 this.markerClusterer.addMarkers(markersToAdd);
             } else {
@@ -135,14 +136,16 @@ geocamAware.MapsApiMapViewer = new Class(
     },
     
     highlightFeature: function(feature) {
-        if (feature.mapObject != null) {
-            feature.mapObject.setIcon(this.getMarkerImage(feature, true));
+        if (feature.highlightedMarker != null) {
+            this.clearMarkerListeners(feature, feature.normalMarker);
+            feature.highlightedMarker.setMap(this.gmap);
         }
     },
     
     unhighlightFeature: function(feature) {
-        if (feature.mapObject != null) {
-            feature.mapObject.setIcon(this.getMarkerImage(feature, false));
+        if (feature.highlightedMarker != null) {
+            feature.highlightedMarker.setMap(null);
+            this.setMarkerListeners(feature, feature.normalMarker);
         }
     },
     
@@ -152,15 +155,15 @@ geocamAware.MapsApiMapViewer = new Class(
     
     removeFeatureFromMap: function (feature) {
         var self = this;
-        if (feature.mapObject == null) {
+        if (feature.normalMarker == null) {
             // nothing to remove
         } else if (feature.type == "Track") {
-            for (var i=0; i < feature.mapObject.polylines.length; i++) {
-                var polyline = feature.mapObject.polylines[i];
+            for (var i=0; i < feature.normalMarker.polylines.length; i++) {
+                var polyline = feature.normalMarker.polylines[i];
                 self.removeFromMap(polyline);
             }
         } else {
-            self.removeFromMap(feature.mapObject);
+            self.removeFromMap(feature.normalMarker);
         }
     },
     
@@ -177,37 +180,47 @@ geocamAware.MapsApiMapViewer = new Class(
         }
     },
     
+    setMarkerListeners: function (feature, marker) {
+        google.maps.event.addListener
+        (marker, 'mouseover',
+         function (uuid) {
+             return function () {
+                 geocamAware.setHighlightedFeature(uuid);
+             }
+         }(feature.uuid));
+        
+        google.maps.event.addListener
+        (marker, 'mouseout',
+         function (uuid) {
+             return function () {
+                 geocamAware.clearHighlightedFeature();
+             }
+         }(feature.uuid));
+
+        google.maps.event.addListener
+        (marker, 'click',
+         function (uuid) {
+             return function () {
+                 geocamAware.setSelectedFeature(uuid);
+             }
+         }(feature.uuid));
+    },
+
+    clearMarkerListeners: function(feature, marker) {
+        google.maps.event.clearListeners(marker, 'mouseover');
+        google.maps.event.clearListeners(marker, 'mouseout');
+        google.maps.event.clearListeners(marker, 'click');
+    },
+
     initializeMarkers: function (feature) {
         var self = this;
         
-        feature.mapObject = self.getMarker(feature, false);
-        this.addToMap(feature.mapObject);
-        var markers = [feature.mapObject];
-        $.each
-            (markers,
-             function (j, marker) {
-                 google.maps.event.addListener
-                 (marker, 'mouseover',
-                  function (uuid) {
-                      return function () {
-                          geocamAware.setHighlightedFeature(uuid);
-                      }
-                  }(feature.uuid));
-                 google.maps.event.addListener
-                 (marker, 'mouseout',
-                  function (uuid) {
-                      return function () {
-                          geocamAware.clearHighlightedFeature();
-                      }
-                  }(feature.uuid));
-                 google.maps.event.addListener
-                 (marker, 'click',
-                  function (uuid) {
-                      return function () {
-                          geocamAware.setSelectedFeature(uuid);
-                      }
-                  }(feature.uuid));
-             });
+        feature.normalMarker = self.getMarker(feature, false);
+        this.setMarkerListeners(feature, feature.normalMarker);
+        this.addToMap(feature.normalMarker);
+
+        feature.highlightedMarker = self.getMarker(feature, true);
+        this.setMarkerListeners(feature, feature.highlightedMarker);
     },
 
     addMarker: function (feature) {
@@ -219,7 +232,7 @@ geocamAware.MapsApiMapViewer = new Class(
         var self = this;
         var trackLines = feature.geometry.geometry;
         var path = [];
-        feature.mapObject = {polylines: []};
+        feature.normalMarker = {polylines: []};
         $.each(trackLines,
                function (i, trackLine) {
                    var path = [];
@@ -233,7 +246,7 @@ geocamAware.MapsApiMapViewer = new Class(
                                                             strokeOpacity: 1.0,
                                                             strokeWidth: 4,
                                                             zIndex: 50});
-                   feature.mapObject.polylines.push(polyline);
+                   feature.normalMarker.polylines.push(polyline);
                });
     },
     
@@ -253,13 +266,16 @@ geocamAware.MapsApiMapViewer = new Class(
     
     getMarkerImage: function (feature, isHighlighted) {
         var scale;
+        var iconMeta;
         if (isHighlighted) {
             scale = 1.0;
+            iconMeta = feature.rotatedIcon.highlighted;
         } else {
-            scale = 0.7;
+            scale = 1.0; // 0.7; // not scaling may improve performance
+            iconMeta = feature.rotatedIcon.normal;
         }
-        var iconUrl = feature.getIconMapRotUrl();
-        var iconSize = new google.maps.Size(feature.rotatedIcon.size[0], feature.rotatedIcon.size[1]);
+        var iconUrl = iconMeta.url;
+        var iconSize = new google.maps.Size(iconMeta.size[0], iconMeta.size[1]);
         var origin = new google.maps.Point(0, 0);
         var scaledSize = new google.maps.Size(scale*iconSize.width, scale*iconSize.height);
         var anchor = new google.maps.Point(0.5*scaledSize.width, 0.5*scaledSize.height);
@@ -319,7 +335,7 @@ geocamAware.MapsApiMapViewer = new Class(
             this.balloon.close();
         }
         this.balloon = new google.maps.InfoWindow({content: feature.getBalloonHtml()});
-        this.balloon.open(this.gmap, feature.mapObject);
+        this.balloon.open(this.gmap, feature.normalMarker);
     },
 
     selectFeature: function(feature) {

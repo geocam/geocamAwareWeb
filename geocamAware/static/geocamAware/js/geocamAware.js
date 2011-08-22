@@ -64,7 +64,11 @@ var geocamAware = {
         if (query != null) {
             url += '?q=' + escape(query);
         }
-        $.getJSON(url, geocamAware.handleNewFeatures);
+        $.getJSON(url,
+                  function (result) {
+                      geocamAware.handleNewFeatures(result);
+                      geocamAware.notifySearchComplete();
+                  });
 
         return false;
     },
@@ -435,6 +439,10 @@ var geocamAware = {
 
     notifyLoading: function () {
         $(geocamAware).trigger("notifyLoadingEvent", arguments);
+    },
+
+    notifySearchComplete: function () {
+        $(geocamAware).trigger("notifySearchCompleteEvent", arguments);
     },
 
     notifyFeaturesInMapViewport: function (features) {

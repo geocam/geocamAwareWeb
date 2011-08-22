@@ -116,15 +116,15 @@ geocamAware.Feature = new Class(
     },
     
     getIconGalleryUrl: function () {
-        return this.icon.url;
+        return this.icon.normal.url;
     },
     
     getIconMapUrl: function () {
-        return this.pointIcon.url;
+        return this.pointIcon.normal.url;
     },
     
     getIconMapRotUrl: function () {
-        return this.rotatedIcon.url;
+        return this.rotatedIcon.normal.url;
     },
 
     getCaptionNotes: function () {
