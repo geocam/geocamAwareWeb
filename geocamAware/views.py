@@ -33,7 +33,7 @@ if settings.GEOCAM_AWARE_MAP_BACKEND == 'earth':
                    ]
 elif settings.GEOCAM_AWARE_MAP_BACKEND == 'maps':
     if settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING:
-        JS_MODULES += [("external/js/markerclusterer_compiled.js", False),
+        JS_MODULES += [("external/js/markerclusterer.js", True),
                        ]
 
 JS_MODULES += [
