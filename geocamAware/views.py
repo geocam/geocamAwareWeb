@@ -24,7 +24,8 @@ EXPORT_SETTINGS = ['SCRIPT_NAME',
                    'GEOCAM_AWARE_GALLERY_PAGE_ROWS',
                    'GEOCAM_AWARE_MAP_BACKEND',
                    'GEOCAM_AWARE_USE_MARKER_CLUSTERING',
-                   'GEOCAM_AWARE_USE_TRACKING']
+                   'GEOCAM_AWARE_USE_TRACKING',
+                   'GEOCAM_AWARE_USE_LAYER_MANAGER']
 JS_MODULES = []
 
 if settings.GEOCAM_AWARE_MAP_BACKEND == 'earth':
@@ -52,6 +53,7 @@ JS_MODULES += [
     ("geocamAware/js/SidebarSwitcher.js", True),
     ("geocamAware/js/FeatureDetailWidget.js", True),
     ("geocamAware/js/FeatureEditWidget.js", True),
+    ("geocamAware/js/LayerManagerWidget.js", True),
     ("geocamAware/js/ajaxForm.js", True),
     ("geocamAware/js/Feature.js", True),
     ("geocamAware/js/PointFeature.js", True),

@@ -24,3 +24,6 @@ MINIFY_JAVASCRIPT = True
 
 # this can be used to specify a string in your template to indicate a navigation tab.  It is not required.
 GEOCAM_AWARE_NAVIGATION_TAB = 'mytabname'
+
+# you can turn on the experimental layer manager feature
+GEOCAM_AWARE_USE_LAYER_MANAGER = False

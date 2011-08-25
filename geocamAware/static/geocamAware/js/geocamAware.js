@@ -133,7 +133,7 @@ var geocamAware = {
         geocamAware.widgetManagerG = new geocamAware.WidgetManager();
         geocamAware.widgetManagerG.setWidgetForDomId("mapContainer", mapFactory);
         geocamAware.mapG = geocamAware.widgetManagerG.activeWidgets["mapContainer"];
-        geocamAware.widgetManagerG.setWidgetForDomId("galleryContainer", geocamAware.SidebarSwitcher.factory);
+        geocamAware.widgetManagerG.setWidgetForDomId("geocamAwareSidebar", geocamAware.SidebarSwitcher.factory);
         
         if (geocamAware.queryG != "") {
             var searchBox = $('#searchBox');
