@@ -30,7 +30,7 @@ geocamAware.Feature = new Class(
         var w0 = geocamAware.settings.GEOCAM_CORE_DESC_THUMB_SIZE[0];
         var thumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_CORE_DESC_THUMB_SIZE);
         return ''
-            + '<a href="' + this.getViewerUrl() + '"\n'
+            + '<a href="' + this.getViewerUrl() + '?tempWindow=1"\n'
             + '   target="_blank"\n'
             + '   title="View full-res image">\n'
 	    + '  <img'
@@ -50,7 +50,7 @@ geocamAware.Feature = new Class(
 
     getFullResLinkHtml: function () {
         return ''
-            + '  <div style="margin-top: 10px;"><a href="' + this.getViewerUrl() + '" target="_blank">\n'
+            + '  <div style="margin-top: 10px;"><a href="' + this.getViewerUrl() + '?tempWindow=1" target="_blank">\n'
             + '    View full-res image'
             + '  </a></div>\n'
     },
