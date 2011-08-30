@@ -70,6 +70,13 @@ def getExportSettings():
 def loadScript(url):
     return '<script src="%s" type="text/javascript"></script>' % url
 
+def getLoadJavascriptHtml():
+    if settings.MINIFY_JAVASCRIPT:
+        return loadScript(settings.MEDIA_URL + 'geocamAware/js/geocamAwareMin.js')
+    else:
+        return '\n'.join([loadScript(settings.MEDIA_URL + path)
+                          for path, doMinify in JS_MODULES])
+
 def main(request):
     if request.user.is_authenticated():
         accountWidget = ('<b>%(username)s</b> <a href="%(SCRIPT_NAME)saccounts/logout/">logout</a>'
@@ -83,19 +90,13 @@ def main(request):
                          % dict(SCRIPT_NAME=settings.SCRIPT_NAME,
                                 path=urllib.quote(path)))
 
-    if settings.MINIFY_JAVASCRIPT:
-        loadJsModules = loadScript(settings.MEDIA_URL + 'geocamAware/js/geocamAwareMin.js')
-    else:
-        loadJsModules = '\n'.join([loadScript(settings.MEDIA_URL + path)
-                                   for path, doMinify in JS_MODULES])
-        
     return render_to_response('main.html',
                               dict(query=request.session.get('q', ''),
                                    viewport=request.session.get('v', ''),
                                    accountWidget=accountWidget,
                                    exportSettings=getExportSettings(),
                                    settings=settings,
-                                   loadJsModules=loadJsModules,
+                                   loadJsModules=getLoadJavascriptHtml(),
                                    navigation_tab=settings.GEOCAM_AWARE_NAVIGATION_TAB),
                               context_instance=RequestContext(request))
 
