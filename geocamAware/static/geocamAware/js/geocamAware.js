@@ -59,10 +59,19 @@ var geocamAware = {
         geocamAware.updateFeatures(geocamAware.featuresG, diff);
     },
 
-    reloadFeatures: function (query) {
+    reloadFeatures: function (query, numFeatures) {
         var url = geocamAware.settings.SCRIPT_NAME + "geocamLens/features.json";
+
+        var params = [];
         if (query != null) {
-            url += '?q=' + escape(query);
+            params.push('q=' + escape(query));
+        }
+        if (numFeatures != null) {
+            params.push('n=' + numFeatures);
+        }
+
+        if (params.length) {
+            url += '?' + params.join('&');
         }
         $.getJSON(url,
                   function (result) {
@@ -98,13 +107,18 @@ var geocamAware = {
         $(geocamAware).trigger('error', [shortMessage, longMessage]);
     },
 
-    runSearch: function (query) {
+    runSearch: function (query, numFeatures) {
+        // user probably pressed 'Go' button without typing anything
+        if (query == 'Search') {
+            query = '';
+        }
+
         geocamAware.queryG = query;
 
         geocamAware.clearHighlightedFeature();
         geocamAware.clearSelectedFeature();
         geocamAware.notifyLoading();
-        geocamAware.reloadFeatures(query);
+        geocamAware.reloadFeatures(query, numFeatures);
         geocamAware.setSessionVars({'q': query});
         return false;
     },
