@@ -12,10 +12,10 @@ geocamAware.Photo = new Class(
         var usng = ''
             + '  <tr>\n'
             + '    <td class="captionHeader">usng</td>\n';
-        if (this.latitude != null) {
-            usng += '    <td>' + LLtoUSNG(this.latitude, this.longitude, 5) + '&nbsp;&nbsp;</td>\n'
+        if (geocamAware.nullOrUndefined(this.latitude)) {
+            usng += '    <td>(unknown)</td>\n';
         } else {
-            usng += '    <td>(unknown)</td>\n'
+            usng += '    <td>' + LLtoUSNG(this.latitude, this.longitude, 5) + '&nbsp;&nbsp;</td>\n';
         }
         usng += '  </tr>\n';
         

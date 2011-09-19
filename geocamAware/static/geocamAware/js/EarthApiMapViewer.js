@@ -49,7 +49,7 @@ geocamAware.EarthApiMapViewer = new Class(
                });
         
         if (diff.featuresToAdd.length > 0) {
-            if (self.allFeaturesFolder == null) {
+            if (self.allFeaturesFolder === null) {
                 self.allFeaturesFolder = self.ge.createFolder("allFeatures");
                 self.ge.getFeatures().appendChild(self.allFeaturesFolder);
             }
@@ -160,20 +160,20 @@ geocamAware.EarthApiMapViewer = new Class(
                                                  function (uuid) {
                                                      return function(event) {
                                                          geocamAware.setHighlightedFeature(uuid);
-                                                     }
+                                                     };
                                                  }(feature.uuid));
                    google.earth.addEventListener(placemark, 'mouseout',
                                                  function (uuid) {
                                                      return function(event) {
                                                          geocamAware.clearHighlightedFeature();
-                                                     }
+                                                     };
                                                  }(feature.uuid));
                    google.earth.addEventListener(placemark, 'click',
                                                  function (uuid) {
                                                      return function(event) {
                                                          event.preventDefault();
                                                          geocamAware.setSelectedFeature(uuid);
-                                                     }
+                                                     };
                                                  }(feature.uuid));
                });
         
@@ -191,4 +191,4 @@ geocamAware.EarthApiMapViewer = new Class(
 
 geocamAware.EarthApiMapViewer.factory = function (domId) {
     return new geocamAware.EarthApiMapViewer(domId);
-}
+};

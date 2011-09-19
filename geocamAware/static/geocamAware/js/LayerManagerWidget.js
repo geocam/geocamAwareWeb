@@ -21,4 +21,4 @@ geocamAware.LayerManagerWidget = new Class(
 
 geocamAware.LayerManagerWidget.factory = function (domId) {
     return new geocamAware.LayerManagerWidget(domId);
-}
+};

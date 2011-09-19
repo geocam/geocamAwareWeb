@@ -52,7 +52,7 @@ geocamAware.Feature = new Class(
         return ''
             + '  <div style="margin-top: 10px;"><a href="' + this.getViewerUrl() + '?tempWindow=1" target="_blank">\n'
             + '    View full-res image'
-            + '  </a></div>\n'
+            + '  </a></div>\n';
     },
 
     getEditLinkHtml: function () {
@@ -128,7 +128,7 @@ geocamAware.Feature = new Class(
     },
 
     getCaptionNotes: function () {
-        if (this.notes == null) {
+        if (geocamAware.nullOrUndefined(this.notes)) {
             return ''
                 + '  <tr>\n'
                 + '    <td colspan="2" style="font-size: 1.5em; color: #999;">(no notes)</td>\n'
@@ -143,7 +143,7 @@ geocamAware.Feature = new Class(
     
     getCaptionTags: function () {
         var tags = '  <tr>\n';
-        if (this.tags == '') {
+        if (this.tags === '') {
             tags += '    <td colspan="2" style="color: #777">(no tags)</td>';
         } else {
             tags += '    <td colspan="2">';
@@ -188,13 +188,13 @@ geocamAware.Feature = new Class(
         caption += this.getCaptionNotes();
         caption += this.getCaptionTags();
         caption += this.getCaptionMisc(); // relative time, author, name
-        if (this.getCaptionLatLon != null) {
+        if (this.getCaptionLatLon !== undefined) {
             caption += this.getCaptionLatLon();
         }
-        if (this.getCaptionAltitude != null) {
+        if (this.getCaptionAltitude !== undefined) {
             caption += this.getCaptionAltitude();
         }
-        if (this.getCaptionHeading != null) {
+        if (this.getCaptionHeading !== undefined) {
             caption += this.getCaptionHeading();
         }
         caption += this.getCaptionTimePrecise();

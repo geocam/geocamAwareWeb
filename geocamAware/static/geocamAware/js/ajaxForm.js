@@ -24,7 +24,7 @@ $extend(geocamAware,
     },
 
     ajaxFormResponseHandler: function (responseJson, statusText, xhr) {
-        if (responseJson.error == null) {
+        if (geocamAware.nullOrUndefined(responseJson.error)) {
             $('#ajaxFormEditStatus').html('<div class="successStatus">'
                                           + 'Your changes were saved.'
                                           + '</div>');

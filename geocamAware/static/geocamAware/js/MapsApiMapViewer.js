@@ -34,7 +34,7 @@ geocamAware.MapsApiMapViewer = new Class(
             mapTypeId: google.maps.MapTypeId.HYBRID
         };
         this.gmap = new google.maps.Map(document.getElementById(domId), myOptions);
-        if (geocamAware.viewportG != "") {
+        if (geocamAware.viewportG !== "") {
             this.setViewport(geocamAware.viewportG);
             this.boundsAreSet = true;
         }
@@ -60,11 +60,11 @@ geocamAware.MapsApiMapViewer = new Class(
         this.setListeners();
 
         if (diff.featuresToDelete.length > 0 || diff.featuresToAdd.length > 0) {
+            var self = this;
             if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
                 // the MarkerClusterer removeMarker() operation is very slow,
                 // so we're better off clearing the markers and then adding them
                 // all back
-                var self = this;
                 this.markerClusterer.clearMarkers();
                 var markersToAdd = [];
                 $.each(newFeatures,
@@ -74,7 +74,6 @@ geocamAware.MapsApiMapViewer = new Class(
                        });
                 this.markerClusterer.addMarkers(markersToAdd);
             } else {
-                var self = this;
                 $.each(diff.featuresToDelete,
                        function (i, feature) {
                            self.removeFeatureFromMap(feature);
@@ -111,7 +110,7 @@ geocamAware.MapsApiMapViewer = new Class(
     setViewport: function (view) {
         var v = view.split(',');
         this.gmap.setCenter(new google.maps.LatLng(v[0], v[1]));
-        this.gmap.setZoom(parseInt(v[2]));
+        this.gmap.setZoom(parseInt(v[2], 10));
     },
     
     getFilteredFeatures: function (features) {
@@ -136,14 +135,14 @@ geocamAware.MapsApiMapViewer = new Class(
     },
     
     highlightFeature: function(feature) {
-        if (feature.highlightedMarker != null) {
+        if (!geocamAware.nullOrUndefined(feature.highlightedMarker)) {
             this.clearMarkerListeners(feature, feature.normalMarker);
             feature.highlightedMarker.setMap(this.gmap);
         }
     },
     
     unhighlightFeature: function(feature) {
-        if (feature.highlightedMarker != null) {
+        if (!geocamAware.nullOrUndefined(feature.highlightedMarker)) {
             feature.highlightedMarker.setMap(null);
             this.setMarkerListeners(feature, feature.normalMarker);
         }
@@ -155,7 +154,7 @@ geocamAware.MapsApiMapViewer = new Class(
     
     removeFeatureFromMap: function (feature) {
         var self = this;
-        if (feature.normalMarker == null) {
+        if (geocamAware.nullOrUndefined(feature.normalMarker)) {
             // nothing to remove
         } else if (feature.type == "Track") {
             for (var i=0; i < feature.normalMarker.polylines.length; i++) {
@@ -168,9 +167,9 @@ geocamAware.MapsApiMapViewer = new Class(
     },
     
     featureIntersectsBounds: function (feature, bounds) {
-        if (feature.latitude != null) {
+        if (!geocamAware.nullOrUndefined(feature.latitude)) {
             return bounds.contains(new google.maps.LatLng(feature.latitude, feature.longitude));
-        } else if (feature.minLat != null) {
+        } else if (!geocamAware.nullOrUndefined(feature.minLat)) {
             var ibounds = new google.maps.LatLngBounds();
             ibounds.extend(new google.maps.LatLng(feature.minLat, feature.minLon));
             ibounds.extend(new google.maps.LatLng(feature.maxLat, feature.maxLon));
@@ -186,7 +185,7 @@ geocamAware.MapsApiMapViewer = new Class(
          function (uuid) {
              return function () {
                  geocamAware.setHighlightedFeature(uuid);
-             }
+             };
          }(feature.uuid));
         
         google.maps.event.addListener
@@ -194,7 +193,7 @@ geocamAware.MapsApiMapViewer = new Class(
          function (uuid) {
              return function () {
                  geocamAware.clearHighlightedFeature();
-             }
+             };
          }(feature.uuid));
 
         google.maps.event.addListener
@@ -202,7 +201,7 @@ geocamAware.MapsApiMapViewer = new Class(
          function (uuid) {
              return function () {
                  geocamAware.setSelectedFeature(uuid);
-             }
+             };
          }(feature.uuid));
     },
 
@@ -252,12 +251,12 @@ geocamAware.MapsApiMapViewer = new Class(
     
     addFeature: function (feature) {
         if (feature.geometry.type == 'Point') {
-            if (feature.latitude == null) {
+            if (geocamAware.nullOrUndefined(feature.latitude)) {
                 return; // skip non-geotagged features
             }
             this.addMarker(feature);
         } else if (feature.type == 'Track') {
-            if (feature.minLat == null) {
+            if (geocamAware.nullOrUndefined(feature.minLat)) {
                 return; // skip non-geotagged features
             }
             this.addTrack(feature);
@@ -319,9 +318,9 @@ geocamAware.MapsApiMapViewer = new Class(
             var bounds = new google.maps.LatLngBounds();
             $.each(geocamAware.featuresG,
                    function (i, feature) {
-                       if (feature.latitude != null) {
+                       if (!geocamAware.nullOrUndefined(feature.latitude)) {
                            bounds.extend(new google.maps.LatLng(feature.latitude, feature.longitude));
-                       } else if (feature.minLat != null) {
+                       } else if (!geocamAware.nullOrUndefined(feature.minLat)) {
                            var featureBounds = new google.maps.LatLngBounds
                            (new google.maps.LatLng(feature.minLat, feature.minLon),
                             new google.maps.LatLng(feature.maxLat, feature.maxLon));
@@ -338,7 +337,7 @@ geocamAware.MapsApiMapViewer = new Class(
     },
     
     showBalloonForFeature: function (feature) {
-        if (this.balloon != null) {
+        if (this.balloon !== undefined) {
             this.balloon.close();
         }
         this.balloon = new google.maps.InfoWindow({content: feature.getBalloonHtml()});
@@ -361,4 +360,4 @@ geocamAware.MapsApiMapViewer = new Class(
 
 geocamAware.MapsApiMapViewer.factory = function (domId) {
     return new geocamAware.MapsApiMapViewer(domId);
-}
+};

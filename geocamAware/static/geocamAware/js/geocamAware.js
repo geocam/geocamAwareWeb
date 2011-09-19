@@ -21,6 +21,10 @@ var geocamAware = {
     highlightedFeatureUuid: null,
     selectedFeatureUuid: null,
     
+    nullOrUndefined: function (x) {
+        return ((x === null) || (x === undefined));
+    },
+
     parseFeature: function (feature) {
         // note: destructive
 
@@ -48,7 +52,7 @@ var geocamAware = {
         feature = geocamAware.parseFeature(feature);
 
         var oldFeature = geocamAware.featuresByUuidG[feature.uuid];
-        if (oldFeature.visibleIndex != null) {
+        if (!geocamAware.nullOrUndefined(oldFeature.visibleIndex)) {
             feature.visibleIndex = oldFeature.visibleIndex;
             geocamAware.visibleFeaturesG[oldFeature.visibleIndex] = feature;
         }
@@ -63,10 +67,10 @@ var geocamAware = {
         var url = geocamAware.settings.SCRIPT_NAME + "geocamLens/features.json";
 
         var params = [];
-        if (query != null) {
+        if (query !== '') {
             params.push('q=' + escape(query));
         }
-        if (numFeatures != null) {
+        if (numFeatures !== undefined) {
             params.push('n=' + numFeatures);
         }
 
@@ -83,7 +87,7 @@ var geocamAware = {
     },
 
     handleNewFeatures: function (response) {
-        if (response.error == null) {
+        if (geocamAware.nullOrUndefined(response.error)) {
             var jsonFeatures = response.result.features;
             var parsedFeatures = [];
             $.each(jsonFeatures,
@@ -100,7 +104,7 @@ var geocamAware = {
     showError: function (shortMessage, longMessage) {
         $('#errorMessage').html('<span style="background-color: #ff7; padding: 0.7em; padding-top: 0.3em; padding-bottom: 0.3em;">' + shortMessage + ' <a href="." id="clearError" style="margin-left: 0.5em;">ok</span></span>');
         $('#clearError').click(function () {
-            $('#errorMessage').html('')
+            $('#errorMessage').html('');
             return false;
         });
 
@@ -149,7 +153,7 @@ var geocamAware = {
         geocamAware.mapG = geocamAware.widgetManagerG.activeWidgets["mapContainer"];
         geocamAware.widgetManagerG.setWidgetForDomId("geocamAwareSidebar", geocamAware.SidebarSwitcher.factory);
         
-        if (geocamAware.queryG != "") {
+        if (geocamAware.queryG !== "") {
             var searchBox = $('#searchBox');
             searchBox.val(geocamAware.queryG);
             searchBox.css('color', '#000');
@@ -181,7 +185,7 @@ var geocamAware = {
         $.each(newFeatures,
                function (i, feature) {
                    var matchingOldFeature = oldFeaturesByUuid[feature.uuid];
-                   if (matchingOldFeature == null || matchingOldFeature.version != feature.version) {
+                   if (matchingOldFeature === undefined || matchingOldFeature.version != feature.version) {
                        diff.featuresToAdd.push(feature);
                    } else {
                        matchingOldFeature.keep = true;
@@ -206,7 +210,7 @@ var geocamAware = {
         var filteredFeatures = geocamAware.mapG.getFilteredFeatures(features);
         var visibleFeatures = filteredFeatures.inViewportOrNoPosition;
 
-        if (geocamAware.visibleFeaturesG != null
+        if (geocamAware.visibleFeaturesG !== null
             && geocamAware.featureListsEqual(geocamAware.visibleFeaturesG, visibleFeatures)) return;
         
         // renumber visibleIndex values
@@ -255,8 +259,8 @@ var geocamAware = {
         $.each(features,
                function (uuid, feature) {
                    kml += feature.getKml();
-               })
-            kml += ''
+               });
+        kml += ''
 	    + '  </Document>\n';
         return geocamAware.wrapKml(kml);
     },
@@ -271,7 +275,7 @@ var geocamAware = {
     handleMapViewChange: function () {
         // this is a guarding wrapper around handleMapViewChange0(), which does the real work
 
-        if (geocamAware.mapViewChangeTimeoutG != null) {
+        if (geocamAware.mapViewChangeTimeoutG !== null) {
 	    // avoid handling the same move many times -- clear the old timeout first
 	    clearTimeout(geocamAware.mapViewChangeTimeoutG);
         }
@@ -377,14 +381,14 @@ var geocamAware = {
     
     setViewIfReady: function () {
         // this is a hack, figure out a cleaner integration of tracking later
-        if (geocamAware.mapG != null
+        if (geocamAware.mapG !== null
             && geocamAware.settings.GEOCAM_AWARE_USE_TRACKING
             && geocamAware.settings.GEOCAM_AWARE_MAP_BACKEND == 'maps'
-            && geocamTrack != null) {
+            && geocamAware.nullOrUndefined(geocamTrack)) {
             geocamTrack.startTracking();
         }
 
-        if (geocamAware.mapG != null && geocamAware.mapG.isReady && geocamAware.newFeaturesG != null) {
+        if (geocamAware.mapG !== null && geocamAware.mapG.isReady && geocamAware.newFeaturesG !== null) {
             var oldFeatures = geocamAware.featuresG;
             geocamAware.featuresG = geocamAware.newFeaturesG;
             geocamAware.featuresByUuidG = geocamAware.uuidMap(geocamAware.featuresG);
@@ -395,7 +399,7 @@ var geocamAware = {
 
     getLoadingIcon: function () {
         return '<img src="' + geocamAware.settings.MEDIA_URL + 'external/icons/loading.gif"'
-	    +'   width="24" height="24" class="loadingIcon" title="loading icon"/>'
+	    +'   width="24" height="24" class="loadingIcon" title="loading icon"/>';
     },
 
     getPendingStatusHtml: function (message) {
@@ -419,7 +423,7 @@ var geocamAware = {
     },
     
     clearHighlightedFeature: function () {
-        if (geocamAware.highlightedFeatureUuid != null) {
+        if (geocamAware.highlightedFeatureUuid !== null) {
             var feature = geocamAware.featuresByUuidG[geocamAware.highlightedFeatureUuid];
             $(geocamAware).trigger("unhighlightFeatureEvent", [feature]);
             geocamAware.highlightedFeatureUuid = null;
@@ -440,7 +444,7 @@ var geocamAware = {
     },
 
     clearSelectedFeature: function () {
-        if (geocamAware.selectedFeatureUuid != null) {
+        if (geocamAware.selectedFeatureUuid !== null) {
             var feature = geocamAware.featuresByUuidG[geocamAware.selectFeatureUuid];
             $(geocamAware).trigger("unselectFeatureEvent", [feature]);
             geocamAware.selectedFeatureUuid = null;

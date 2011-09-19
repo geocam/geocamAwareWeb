@@ -34,10 +34,10 @@ geocamAware.PointFeature = new Class(
         var ll = ''
             + '  <tr>\n'
             + '    <td class="captionHeader">lat, lon</td>\n';
-        if (this.latitude != null) {
-            ll += '    <td>' + this.latitude.toFixed(6) + ', ' + this.longitude.toFixed(6) + '</td>\n';
-        } else {
+        if (geocamAware.nullOrUndefined(this.latitude)) {
             ll += '    <td>(unknown)</td>\n';
+        } else {
+            ll += '    <td>' + this.latitude.toFixed(6) + ', ' + this.longitude.toFixed(6) + '</td>\n';
         }
         ll += ''
             + '  </tr>\n';
@@ -49,16 +49,16 @@ geocamAware.PointFeature = new Class(
         var alt = ''
             + '  <tr>\n'
             + '    <td class="captionHeader">altitude</td>\n';
-        if (this.altitude != null) {
+        if (geocamAware.nullOrUndefined(this.altitude)) {
+            alt += '    <td>(unknown)</td>\n';
+        } else {
             var ref;
-            if (this.altitudeRef == null) {
+            if (geocamAware.nullOrUndefined(this.altitudeRef)) {
                 ref = 'unknown';
             } else {
                 ref = this.altitudeRef;
             }
-            alt += '    <td>' + this.altitude + ' meters (ref. ' + ref + ')&nbsp;&nbsp;</td>\n'
-        } else {
-            alt += '    <td>(unknown)</td>\n'
+            alt += '    <td>' + this.altitude + ' meters (ref. ' + ref + ')&nbsp;&nbsp;</td>\n';
         }
         alt += '  </tr>\n';
         

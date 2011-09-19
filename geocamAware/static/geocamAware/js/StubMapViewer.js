@@ -27,4 +27,4 @@ geocamAware.StubMapViewer = new Class(
 
 geocamAware.StubMapViewer.factory = function (domId) {
     return new geocamAware.StubMapViewer(domId);
-}
+};

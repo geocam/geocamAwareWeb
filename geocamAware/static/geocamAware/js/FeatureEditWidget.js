@@ -18,7 +18,7 @@ geocamAware.FeatureEditWidget = new Class(
 
         var self = this;
         $.get(this.feature.getEditUrl(true),
-              function (data) { self.formLoadedHandler(data) });
+              function (data) { self.formLoadedHandler(data); });
 
         var content = '<div style="margin: 10px;">'
             + geocamAware.getLoadingIcon()
@@ -36,7 +36,7 @@ geocamAware.FeatureEditWidget = new Class(
             + '    ' + this.feature.getDetailImageHtml()
             + '  </div>\n'
             + '  ' + formHtml
-            + '</div>\n'
+            + '</div>\n';
 
         $('#' + this.domId).html(content);
 
@@ -60,4 +60,4 @@ geocamAware.FeatureEditWidget = new Class(
 
 geocamAware.FeatureEditWidget.factory = function (domId, uuid) {
     return new geocamAware.FeatureEditWidget(domId, uuid);
-}
+};

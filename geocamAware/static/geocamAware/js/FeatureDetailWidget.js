@@ -42,4 +42,4 @@ geocamAware.FeatureDetailWidget = new Class(
 
 geocamAware.FeatureDetailWidget.factory = function (domId, uuid) {
     return new geocamAware.FeatureDetailWidget(domId, uuid);
-}
+};

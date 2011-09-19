@@ -22,7 +22,7 @@ geocamAware.Track = new Class(
             + '      <coordinates>\n';
         for (var i=0; i < this.length; i++) {
             var pt = track[i];
-            result += '        ' + pt[0] + ',' + pt[1] + ',' + pt[2] + '\n'
+            result += '        ' + pt[0] + ',' + pt[1] + ',' + pt[2] + '\n';
         }
         result += ''
             + '      </coordinates>\n'

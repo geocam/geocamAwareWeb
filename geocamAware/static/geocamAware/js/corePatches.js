@@ -15,4 +15,4 @@ geocamAware.getDirUrl = function (feature) {
     }
     ret += "/" + feature.version + "/";
     return ret;
-}
+};

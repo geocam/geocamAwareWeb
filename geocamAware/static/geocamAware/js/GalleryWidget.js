@@ -18,7 +18,7 @@ geocamAware.GalleryWidget = new Class(
           ('<div id="geocamAware_gallery"></div>\n' +
            '<div id="geocamAware_galleryCaption"></div>\n');
 
-        if (geocamAware.visibleFeaturesG != null) {
+        if (geocamAware.visibleFeaturesG !== null) {
             this.notifyFeaturesInMapViewport(geocamAware.visibleFeaturesG);
         } else {
             $("#geocamAware_gallery").html(geocamAware.getPendingStatusHtml('Loading...'));
@@ -122,9 +122,9 @@ geocamAware.GalleryWidget = new Class(
     },
 
     renderPage: function (visibleFeatures, pageNum) {
-        if (visibleFeatures.length == 0) {
-            if (geocamAware.featuresG.length == 0) {
-                if (geocamAware.queryG == "") {
+        if (visibleFeatures.length === 0) {
+            if (geocamAware.featuresG.length === 0) {
+                if (geocamAware.queryG === "") {
                     $("#geocamAware_gallery").html("No features in DB yet.");
                 } else {
                     $("#geocamAware_gallery").html("No matches found.");
@@ -147,19 +147,19 @@ geocamAware.GalleryWidget = new Class(
                         function(uuid) {
                             return function() {
                                 geocamAware.setHighlightedFeature(uuid);
-                            }
+                            };
                         }(feature.uuid),
                         function(uuid) {
                             return function() {
                                 geocamAware.clearHighlightedFeature();
-                            }
+                            };
                         }(feature.uuid)
                     );
                     td.click(
                         function(uuid) {
                             return function() {
                                 geocamAware.setSelectedFeature(uuid);
-                            }
+                            };
                         }(feature.uuid)
                     );
                 }
@@ -173,4 +173,4 @@ geocamAware.GalleryWidget = new Class(
 
 geocamAware.GalleryWidget.factory = function (domId) {
     return new geocamAware.GalleryWidget(domId);
-}
+};

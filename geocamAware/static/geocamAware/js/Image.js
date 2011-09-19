@@ -19,18 +19,18 @@ geocamAware.Image = new Class(
     getCaptionHeading: function () {
         var heading = ''
             + '  <tr>\n'
-            + '    <td class="captionHeader">heading</td>\n'
-        if (this.yaw != null) {
+            + '    <td class="captionHeader">heading</td>\n';
+        if (geocamAware.nullOrUndefined(this.yaw)) {
+            heading += '    <td>(unknown)</td>\n';
+        } else {
             var cardinal = geocamAware.getHeadingCardinal(this.yaw);
             var ref;
-            if (this.yawRef == null) {
+            if (geocamAware.nullOrUndefined(this.yawRef)) {
                 ref = 'unknown';
             } else {
                 ref = this.yawRef;
             }
             heading += '    <td>' + cardinal + ' ' + Math.floor(this.yaw) + '&deg; (ref. ' + ref + ')&nbsp;&nbsp;</td>\n';
-        } else {
-            heading += '    <td>(unknown)</td>\n'
         }
         heading += '  </tr>\n';
         

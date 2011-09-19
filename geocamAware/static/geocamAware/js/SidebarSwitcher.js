@@ -15,7 +15,7 @@ geocamAware.SidebarSwitcher = new Class(
         $('#' + this.domId).html(this.getHtml());
         var that = this;
         $('#' + this.domId + '_select')
-            .change(function () { that.handleViewSelect(this) });
+            .change(function () { that.handleViewSelect(this); });
         
         this.setToGallery();
 
@@ -113,4 +113,4 @@ geocamAware.SidebarSwitcher = new Class(
 
 geocamAware.SidebarSwitcher.factory = function (domId) {
     return new geocamAware.SidebarSwitcher(domId);
-}
+};

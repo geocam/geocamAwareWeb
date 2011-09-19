@@ -42,7 +42,7 @@ geocamAware.MapViewer = new Class({
     },
 
     getFeatureHasPosition: function (feature) {
-        return (feature.latitude != null) || (feature.minLat != null);
+        return !geocamAware.nullOrUndefined(feature.latitude) || !geocamAware.nullOrUndefined(feature.minLat);
     }
 });
 
