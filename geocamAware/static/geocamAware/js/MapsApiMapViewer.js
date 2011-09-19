@@ -87,15 +87,15 @@ geocamAware.MapsApiMapViewer = new Class(
                            });
                 }
             }
-            
-            if (!this.boundsAreSet) {
-                this.zoomToFit();
-            }
-            // used to call geocamAware.setGalleryToVisibleSubsetOf(geocamAware.featuresG)
-            // here, but geocamAware.handleMapViewChange() gives the map backend
-            // some time to adjust after the zoomToFit() call
-            geocamAware.handleMapViewChange();
         }
+
+        if (!this.boundsAreSet) {
+            this.zoomToFit();
+        }
+        // used to call geocamAware.setGalleryToVisibleSubsetOf(geocamAware.featuresG)
+        // here, but geocamAware.handleMapViewChange() gives the map backend
+        // some time to adjust after the zoomToFit() call
+        geocamAware.handleMapViewChange();
     },
     
     zoomToFit: function () {
@@ -315,19 +315,26 @@ geocamAware.MapsApiMapViewer = new Class(
     },
     
     getMarkerBounds: function () {
-        var bounds = new google.maps.LatLngBounds();
-        $.each(geocamAware.featuresG,
-               function (i, feature) {
-                   if (feature.latitude != null) {
-                       bounds.extend(new google.maps.LatLng(feature.latitude, feature.longitude));
-                   } else if (feature.minLat != null) {
-                       var featureBounds = new google.maps.LatLngBounds
-                         (new google.maps.LatLng(feature.minLat, feature.minLon),
-                          new google.maps.LatLng(feature.maxLat, feature.maxLon));
-                       bounds.union(featureBounds);
-                   }
-               });
-        return bounds;
+        if (geocamAware.featuresG.length > 0) {
+            var bounds = new google.maps.LatLngBounds();
+            $.each(geocamAware.featuresG,
+                   function (i, feature) {
+                       if (feature.latitude != null) {
+                           bounds.extend(new google.maps.LatLng(feature.latitude, feature.longitude));
+                       } else if (feature.minLat != null) {
+                           var featureBounds = new google.maps.LatLngBounds
+                           (new google.maps.LatLng(feature.minLat, feature.minLon),
+                            new google.maps.LatLng(feature.maxLat, feature.maxLon));
+                           bounds.union(featureBounds);
+                       }
+                   });
+            return bounds;
+        } else {
+            var b = geocamAware.settings.GEOCAM_AWARE_DEFAULT_MAP_BOUNDS;
+            var sw = new google.maps.LatLng(b.south, b.west);
+            var ne = new google.maps.LatLng(b.north, b.east);
+            return new google.maps.LatLngBounds(sw, ne);
+        }
     },
     
     showBalloonForFeature: function (feature) {

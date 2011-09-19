@@ -27,3 +27,11 @@ GEOCAM_AWARE_NAVIGATION_TAB = 'mytabname'
 
 # you can turn on the experimental layer manager feature
 GEOCAM_AWARE_USE_LAYER_MANAGER = False
+
+# map lat/lon bounds to use when there are no features
+GEOCAM_AWARE_DEFAULT_MAP_BOUNDS = {
+    "west": -130,
+    "south": 22,
+    "east": -59,
+    "north": 52,
+}

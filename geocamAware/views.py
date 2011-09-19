@@ -25,7 +25,8 @@ EXPORT_SETTINGS = ['SCRIPT_NAME',
                    'GEOCAM_AWARE_MAP_BACKEND',
                    'GEOCAM_AWARE_USE_MARKER_CLUSTERING',
                    'GEOCAM_AWARE_USE_TRACKING',
-                   'GEOCAM_AWARE_USE_LAYER_MANAGER']
+                   'GEOCAM_AWARE_USE_LAYER_MANAGER',
+                   'GEOCAM_AWARE_DEFAULT_MAP_BOUNDS']
 JS_MODULES = []
 
 if settings.GEOCAM_AWARE_MAP_BACKEND == 'earth':
