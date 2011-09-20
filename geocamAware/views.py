@@ -63,20 +63,24 @@ JS_MODULES += [
     ("geocamAware/js/Image.js", True),
     ]
 
+
 def getExportSettings():
     exportDict = dict(((f, getattr(settings, f))
                        for f in EXPORT_SETTINGS))
     return json.dumps(exportDict)
 
+
 def loadScript(url):
     return '<script src="%s" type="text/javascript"></script>' % url
+
 
 def getLoadJavascriptHtml():
     if settings.MINIFY_JAVASCRIPT:
         return loadScript(settings.MEDIA_URL + 'geocamAware/js/geocamAwareMin.js')
     else:
         return '\n'.join([loadScript(settings.MEDIA_URL + path)
-                          for path, doMinify in JS_MODULES])
+                          for path, _doMinify in JS_MODULES])
+
 
 def main(request):
     if request.user.is_authenticated():
@@ -86,7 +90,7 @@ def main(request):
     else:
         path = request.get_full_path()
         if not requestIsSecure(request):
-            path += '?protocol=http' # redirect back to http after login
+            path += '?protocol=http'  # redirect back to http after login
         accountWidget = ('<b>guest</b> <a href="%(SCRIPT_NAME)saccounts/login/?next=%(path)s">login</a>'
                          % dict(SCRIPT_NAME=settings.SCRIPT_NAME,
                                 path=urllib.quote(path)))
@@ -100,6 +104,7 @@ def main(request):
                                    loadJsModules=getLoadJavascriptHtml(),
                                    navigation_tab=settings.GEOCAM_AWARE_NAVIGATION_TAB),
                               context_instance=RequestContext(request))
+
 
 def setVars(request):
     for var in ('v', 'q'):
