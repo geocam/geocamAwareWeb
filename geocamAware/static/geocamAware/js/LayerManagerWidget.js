@@ -13,8 +13,57 @@ geocamAware.LayerManagerWidget = new Class(
     initialize: function (domId) {
         this.domId = domId;
 
-        var content = '<div style="margin: 10px;">This is the Layers widget</div>';
-        $('#' + this.domId).html(content);
+        var content = [];
+        this.layers = {};
+
+        content.push('<form style="margin-top: 20px;">');
+        $.each(geocamAware.layerManager.layers,
+               function (i, layer) {
+                   content.push('<div class="geocamLayerRow">'
+                                + '<label>'
+                                + '<input'
+                                + ' id="geocamAwareLayerCheckbox_' + layer.name + '"'
+                                + ' type="checkbox"'
+                                + ' name="' + layer.name + '"'
+                                + ' value="' + layer.name + '"'
+                                + ' style="position:relative; top: -3px; margin-right: 10px;"'
+                                + '/>');
+                   if (layer.selectable) {
+                       content.push('<a href="#"'
+                                    + ' id="geocamAwareLayerName_' + layer.name + '"'
+                                    + '>' + layer.name + '</a>');
+                   } else {
+                       content.push(layer.name);
+                   }
+                   content.push('</label></div>');
+               });
+        content.push('</form>');
+        var text = content.join('');
+
+        $('#' + this.domId).html(text);
+
+        $.each(geocamAware.layerManager.layers,
+               function (i, layer) {
+                   var checkbox = $('#geocamAwareLayerCheckbox_' + layer.name);
+
+                   if (layer.visibility) {
+                       checkbox.attr('checked', 'checked');
+                   } else {
+                       checkbox.removeAttr('checked');
+                   }
+
+                   checkbox.change(function () {
+                                       layer.setVisibility(this.checked);
+                                   });
+                   
+                   if (layer.selectable) {
+                       $('#geocamAwareLayerName_' + layer.name)
+                           .click(function () {
+                                      layer.select();
+                                      return false;
+                                  });
+                   }
+               });
     }
 
 });

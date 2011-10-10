@@ -43,6 +43,20 @@ geocamAware.MapViewer = new Class({
 
     getFeatureHasPosition: function (feature) {
         return !geocamAware.nullOrUndefined(feature.latitude) || !geocamAware.nullOrUndefined(feature.minLat);
+    },
+
+    initKml: function (id, url) {
+        // create a kml feed with the given id and url. to show the
+        // layer, call showKml().
+    },
+                                      
+    showKml: function (id) {
+        // show the kml feed with the given id
+    },
+
+    hideKml: function (id) {
+        // hide the kml feed with the given id
     }
+                                      
 });
 

@@ -35,3 +35,17 @@ GEOCAM_AWARE_DEFAULT_MAP_BOUNDS = {
     "east": -59,
     "north": 52,
 }
+
+GEOCAM_AWARE_LAYERS = [
+    {
+        "name": "Photos",
+        "type": "geocamLens",
+        "visibility": True
+    },
+    {
+        "name": "Tracks",
+        "type": "kml",
+        "visibility": True,
+        "url": "geocamTrack/tracks.kml"
+    },
+]

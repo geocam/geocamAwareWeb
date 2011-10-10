@@ -26,7 +26,8 @@ EXPORT_SETTINGS = ['SCRIPT_NAME',
                    'GEOCAM_AWARE_USE_MARKER_CLUSTERING',
                    'GEOCAM_AWARE_USE_TRACKING',
                    'GEOCAM_AWARE_USE_LAYER_MANAGER',
-                   'GEOCAM_AWARE_DEFAULT_MAP_BOUNDS']
+                   'GEOCAM_AWARE_DEFAULT_MAP_BOUNDS',
+                   'GEOCAM_AWARE_LAYERS']
 JS_MODULES = []
 
 if settings.GEOCAM_AWARE_MAP_BACKEND == 'earth':
@@ -54,6 +55,10 @@ JS_MODULES += [
     ("geocamAware/js/SidebarSwitcher.js", True),
     ("geocamAware/js/FeatureDetailWidget.js", True),
     ("geocamAware/js/FeatureEditWidget.js", True),
+    ("geocamAware/js/Layer.js", True),
+    ("geocamAware/js/KmlLayer.js", True),
+    ("geocamAware/js/GeoCamLensLayer.js", True),
+    ("geocamAware/js/LayerManager.js", True),
     ("geocamAware/js/LayerManagerWidget.js", True),
     ("geocamAware/js/ajaxForm.js", True),
     ("geocamAware/js/Feature.js", True),
@@ -67,7 +72,7 @@ JS_MODULES += [
 def getExportSettings():
     exportDict = dict(((f, getattr(settings, f))
                        for f in EXPORT_SETTINGS))
-    return json.dumps(exportDict)
+    return json.dumps(exportDict, indent=4, sort_keys=True)
 
 
 def loadScript(url):

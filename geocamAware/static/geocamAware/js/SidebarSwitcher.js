@@ -11,13 +11,7 @@ geocamAware.SidebarSwitcher = new Class(
     initialize: function (domId) {
         this.domId = domId;
 
-
         $('#' + this.domId).html(this.getHtml());
-        var that = this;
-        $('#' + this.domId + '_select')
-            .change(function () { that.handleViewSelect(this); });
-        
-        this.setToGallery();
 
         geocamAware.bindEvent(geocamAware, this, "selectFeature");
         geocamAware.bindEvent(geocamAware, this, "unselectFeature");
@@ -25,23 +19,27 @@ geocamAware.SidebarSwitcher = new Class(
         geocamAware.bindEvent(geocamAware, this, "updateFeatures");
         geocamAware.bindEvent(geocamAware, this, "setToFeatureDetail");
         geocamAware.bindEvent(geocamAware, this, "setToFeatureEdit");
+        geocamAware.bindEvent(geocamAware, this, "setToGallery");
+
+        if (geocamAware.settings.GEOCAM_AWARE_USE_LAYER_MANAGER) {
+            var that = this;
+            $('#' + this.domId + '_layersButton')
+                .click(function () {
+                           that.setToLayers();
+                           return false;
+                       });
+            this.setToLayers();
+        } else {
+            this.setToGallery();
+        }
     },
 
     getHtml: function () {
-        var options = ["Gallery", "Layers"];
         var html = [];
         if (geocamAware.settings.GEOCAM_AWARE_USE_LAYER_MANAGER) {
-            html.push(''
-                      + '<div id="' + this.domId + '_menu">'
-                      + '  View:'
-                      + '  <select id="' + this.domId + '_select">');
-            $.each(options,
-                   function (i, opt) {
-                       html.push('    <option value="' + opt + '">' + opt + '</option>');
-                   });
-            html.push(''
-                      + '  </select>'
-                      + '</div>');
+            html.push('<div style="margin-top: 5px; margin-left: 5px; margin-bottom: 5px;"><a href="#" id="'
+                      + this.domId
+                      + '_layersButton">Layers</a></div>');
         }
         html.push('<div id="' + this.domId + '_content">Loading...</div>');
         return html.join('');

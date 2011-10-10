@@ -20,8 +20,10 @@ geocamAware.MapsApiMapViewer = new Class(
     
     balloon: null,
     
-    boundsAreSet: false,
-    
+    kmlLayers: {},
+
+    featuresHidden: false,
+
     /**********************************************************************
      * implement MapViewer interface
      **********************************************************************/
@@ -36,7 +38,6 @@ geocamAware.MapsApiMapViewer = new Class(
         this.gmap = new google.maps.Map(document.getElementById(domId), myOptions);
         if (geocamAware.viewportG !== "") {
             this.setViewport(geocamAware.viewportG);
-            this.boundsAreSet = true;
         }
 
         if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
@@ -54,6 +55,10 @@ geocamAware.MapsApiMapViewer = new Class(
         this.isReady = true;
         
         geocamAware.setViewIfReady();
+    },
+
+    hasBounds: function () {
+        return this.gmap.getBounds() !== undefined;
     },
 
     updateFeatures: function (newFeatures, diff) {
@@ -88,7 +93,7 @@ geocamAware.MapsApiMapViewer = new Class(
             }
         }
 
-        if (!this.boundsAreSet) {
+        if (!this.hasBounds()) {
             this.zoomToFit();
         }
         // used to call geocamAware.setGalleryToVisibleSubsetOf(geocamAware.featuresG)
@@ -99,7 +104,6 @@ geocamAware.MapsApiMapViewer = new Class(
     
     zoomToFit: function () {
         this.gmap.fitBounds(this.getMarkerBounds());
-        this.boundsAreSet = true;
     },
     
     getViewport: function () {
@@ -354,8 +358,53 @@ geocamAware.MapsApiMapViewer = new Class(
             google.maps.event.addListener(this.gmap, 'bounds_changed', geocamAware.handleMapViewChange);
             this.mainListenerInitialized = true;
         }
-    }
+    },
     
+    initKml: function (id, url) {
+        this.kmlLayers[id] = new google.maps.KmlLayer(url, {preserveViewport: true});
+    },
+                                      
+    showKml: function (id) {
+        this.kmlLayers[id].setMap(this.gmap);
+    },
+
+    hideKml: function (id) {
+        this.kmlLayers[id].setMap(null);
+    },
+                                      
+    hideFeatures: function () {
+        if (this.featuresHidden) return;
+
+        if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
+            this.markerClusterer.clearMarkers();
+        } else {
+            $.each(geocamAware.featuresG,
+                   function (i, feature) {
+                       self.removeFeatureFromMap(feature);
+                   });
+        }
+        this.featuresHidden = true;
+    },
+
+    showFeatures: function () {
+        if (!this.featuresHidden) return;
+
+        if (geocamAware.settings.GEOCAM_AWARE_USE_MARKER_CLUSTERING) {
+            var markersToAdd = [];
+            $.each(geocamAware.featuresG,
+                   function (i, feature) {
+                       markersToAdd.push(feature.normalMarker);
+                   });
+            this.markerClusterer.addMarkers(markersToAdd);
+        } else {
+            $.each(geocamAware.featuresG,
+                   function (i, feature) {
+                       self.addFeature(feature);
+                   });
+        }
+        this.featuresHidden = false;
+    }
+
 });
 
 geocamAware.MapsApiMapViewer.factory = function (domId) {

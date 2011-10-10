@@ -17,6 +17,7 @@ var geocamAware = {
     widgetManagerG: null,
     viewportG: "",
     viewIndexUuidG: null,
+    layerManager: null,
     
     highlightedFeatureUuid: null,
     selectedFeatureUuid: null,
@@ -151,6 +152,9 @@ var geocamAware = {
         geocamAware.widgetManagerG = new geocamAware.WidgetManager();
         geocamAware.widgetManagerG.setWidgetForDomId("mapContainer", mapFactory);
         geocamAware.mapG = geocamAware.widgetManagerG.activeWidgets["mapContainer"];
+        if (geocamAware.settings.GEOCAM_AWARE_USE_LAYER_MANAGER) {
+            geocamAware.layerManager = new geocamAware.LayerManager();
+        }
         geocamAware.widgetManagerG.setWidgetForDomId("geocamAwareSidebar", geocamAware.SidebarSwitcher.factory);
         
         if (geocamAware.queryG !== "") {
@@ -266,10 +270,10 @@ var geocamAware = {
     },
     
     handleMapViewChange0: function () {
-        if (geocamAware.mapG.boundsAreSet) {
+        if (geocamAware.mapG.hasBounds()) {
             geocamAware.setSessionVars({'v': geocamAware.mapG.getViewport()});
+	    geocamAware.checkFeaturesInMapViewport(geocamAware.featuresG);
         }
-	geocamAware.checkFeaturesInMapViewport(geocamAware.featuresG);
     },
 
     handleMapViewChange: function () {
@@ -473,6 +477,15 @@ var geocamAware = {
 
     setToFeatureEdit: function () {
         $(geocamAware).trigger("setToFeatureEditEvent", arguments);
-    }
+    },
 
+    setToGallery: function () {
+        $(geocamAware).trigger("setToGalleryEvent", arguments);
+    },
+
+    qualifyUrl: function (url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.href;
+    }
 };
