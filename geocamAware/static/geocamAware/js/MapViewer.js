@@ -19,6 +19,11 @@ geocamAware.MapViewer = new Class({
 	// add or delete features when we get an update
     },
     
+    hasBounds: function () {
+        // return true if the map viewport bounds have been set
+        return true;
+    },
+
     zoomToFit: function () {
 	// zoom map bounds to fit all markers
     },
@@ -56,7 +61,14 @@ geocamAware.MapViewer = new Class({
 
     hideKml: function (id) {
         // hide the kml feed with the given id
+    },
+
+    showFeatures: function () {
+        // show geocamLens features in map view
+    },
+
+    hideFeatures: function () {
+        // hide geocamLens features in map view
     }
-                                      
 });
 
