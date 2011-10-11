@@ -48,4 +48,16 @@ GEOCAM_AWARE_LAYERS = [
         "visibility": True,
         "url": "geocamTrack/tracks.kml"
     },
+    {
+        "name": "Messages",
+        "type": "kml",
+        "visibility": True,
+        "url": "geocamTalk/messages.kml"
+    },
+    {
+        "name": "Notes",
+        "type": "kml",
+        "visibility": True,
+        "url": "geocamMemo/messages.kml"
+    },
 ]
