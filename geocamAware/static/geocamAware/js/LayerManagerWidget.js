@@ -19,8 +19,8 @@ geocamAware.LayerManagerWidget = new Class(
         content.push('<form style="margin-top: 20px;">');
         $.each(geocamAware.layerManager.layers,
                function (i, layer) {
-                   content.push('<div class="geocamLayerRow">'
-                                + '<label>'
+                   content.push('<label>'
+                                + '<div class="geocamLayerRow">'
                                 + '<input'
                                 + ' id="geocamAwareLayerCheckbox_' + layer.name + '"'
                                 + ' type="checkbox"'
@@ -35,7 +35,7 @@ geocamAware.LayerManagerWidget = new Class(
                    } else {
                        content.push(layer.name);
                    }
-                   content.push('</label></div>');
+                   content.push('</div></label>');
                });
         content.push('</form>');
         var text = content.join('');
