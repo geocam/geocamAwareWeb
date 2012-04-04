@@ -14,6 +14,5 @@ urlpatterns = patterns(
     # main
     (r'^setVars(?:\?[^/]*)?$', views.setVars, {'readOnly': True}, "geocamAware_setVars"),
     (r'^$', views.main, {'readOnly': True}, "geocamAware_main"),
-    (r'^$', views.main, {'readOnly': True}, "home"),  # alternate name
 
     )
