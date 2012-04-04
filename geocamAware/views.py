@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from geocamUtil import anyjson as json
-from geocamUtil.middleware.SecurityMiddleware import requestIsSecure
+from geocamUtil.middleware.security import requestIsSecure
 from geocamUtil.auth import getAccountWidget
 
 from geocamAware import settings
