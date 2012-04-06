@@ -61,3 +61,8 @@ GEOCAM_AWARE_LAYERS = [
         "url": "geocamMemo/messages.kml"
     },
 ]
+
+# for multiple thumbnails in sidebar gallery
+GEOCAM_AWARE_GALLERY_THUMB_SIZE = [160, 120]
+# for single thumbnail in sidebar gallery
+GEOCAM_AWARE_DESC_THUMB_SIZE = [480, 360]

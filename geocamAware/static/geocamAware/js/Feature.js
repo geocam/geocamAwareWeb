@@ -27,8 +27,8 @@ geocamAware.Feature = new Class(
     },
 
     getDetailImageHtml: function () {
-        var w0 = geocamAware.settings.GEOCAM_CORE_DESC_THUMB_SIZE[0];
-        var thumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_CORE_DESC_THUMB_SIZE);
+        var w0 = geocamAware.settings.GEOCAM_AWARE_DESC_THUMB_SIZE[0];
+        var thumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_AWARE_DESC_THUMB_SIZE);
         return ''
             + '<a href="' + this.getViewerUrl() + '?tempWindow=1"\n'
             + '   target="_blank"\n'
@@ -78,9 +78,9 @@ geocamAware.Feature = new Class(
     },
     
     getGalleryThumbHtml: function () {
-        var w0 = geocamAware.settings.GEOCAM_CORE_GALLERY_THUMB_SIZE[0];
-        var h0 = geocamAware.settings.GEOCAM_CORE_GALLERY_THUMB_SIZE[1];
-        var galThumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_CORE_GALLERY_THUMB_SIZE);
+        var w0 = geocamAware.settings.GEOCAM_AWARE_GALLERY_THUMB_SIZE[0];
+        var h0 = geocamAware.settings.GEOCAM_AWARE_GALLERY_THUMB_SIZE[1];
+        var galThumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_AWARE_GALLERY_THUMB_SIZE);
         var tw = galThumbSize[0];
         var th = galThumbSize[1];
         return "<td"
