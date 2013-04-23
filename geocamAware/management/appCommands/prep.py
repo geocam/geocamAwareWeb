@@ -28,10 +28,10 @@ class Command(NoArgsCommand):
         srcPairs = [(srcDir + suffix, doMinify)
                     for suffix, doMinify in JS_MODULES]
         minifyJs(builder,
-                 '%s/build/media/geocamAware/js/geocamAwareMin.js' % appDir,
+                 '%s/build/static/geocamAware/js/geocamAwareMin.js' % appDir,
                  srcPairs)
 
-        # link static stuff into build/media
+        # link static stuff into build/static
         inst = Installer(builder)
         inst.installRecurseGlob('%s/static/*' % appDir,
-                                '%s/build/media' % appDir)
+                                '%s/build/static' % appDir)

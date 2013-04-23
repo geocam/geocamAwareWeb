@@ -402,7 +402,7 @@ var geocamAware = {
     },
 
     getLoadingIcon: function () {
-        return '<img src="' + geocamAware.settings.MEDIA_URL + 'external/icons/loading.gif"'
+        return '<img src="' + geocamAware.settings.STATIC_URL + 'external/icons/loading.gif"'
 	    +'   width="24" height="24" class="loadingIcon" title="loading icon"/>';
     },
 

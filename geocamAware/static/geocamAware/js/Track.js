@@ -9,7 +9,7 @@ geocamAware.Track = new Class(
     Extends: geocamAware.ExtentFeature,
 
     getThumbnailUrl: function (width) {
-        return geocamAware.settings.MEDIA_URL + "geocamAware/gpsTrack.png";
+        return geocamAware.settings.STATIC_URL + "geocamAware/gpsTrack.png";
     },
 
     getSizePixels: function () {

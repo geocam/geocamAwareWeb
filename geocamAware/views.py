@@ -17,7 +17,7 @@ from geocamUtil.auth import getAccountWidget
 from geocamAware import settings
 
 EXPORT_SETTINGS = ['SCRIPT_NAME',
-                   'MEDIA_URL',
+                   'STATIC_URL',
                    'DATA_URL',
                    'GEOCAM_AWARE_GALLERY_THUMB_SIZE',
                    'GEOCAM_AWARE_DESC_THUMB_SIZE',
@@ -82,9 +82,9 @@ def loadScript(url):
 
 def getLoadJavascriptHtml():
     if settings.MINIFY_JAVASCRIPT:
-        return loadScript(settings.MEDIA_URL + 'geocamAware/js/geocamAwareMin.js')
+        return loadScript(settings.STATIC_URL + 'geocamAware/js/geocamAwareMin.js')
     else:
-        return '\n'.join([loadScript(settings.MEDIA_URL + path)
+        return '\n'.join([loadScript(settings.STATIC_URL + path)
                           for path, _doMinify in JS_MODULES])
 
 
