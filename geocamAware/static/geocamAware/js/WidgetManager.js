@@ -7,13 +7,13 @@
 geocamAware.WidgetManager = new Class(
 {
     activeWidgets: {},
-    
-    setWidgetForDomId: function (domId, widgetFactory, widgetFactoryArgs) {
+
+    setWidgetForDomId: function(domId, widgetFactory, widgetFactoryArgs) {
         if (widgetFactoryArgs == undefined) {
             widgetFactoryArgs = [];
         }
         this.activeWidgets[domId] = widgetFactory.apply(null, [domId].concat(widgetFactoryArgs));
     }
-    
+
 });
 

@@ -8,23 +8,23 @@ geocamAware.KmlLayer = new Class(
 {
     Extends: geocamAware.Layer,
 
-    initialize: function (opts) {
+    initialize: function(opts) {
         this.parent(opts);
         this.url = geocamAware.qualifyUrl(geocamAware.settings.SCRIPT_NAME + opts.url);
         geocamAware.mapG.initKml(this.name, this.url);
         this.setVisibility(opts.visibility);
     },
 
-    show: function () {
+    show: function() {
         geocamAware.mapG.showKml(this.name);
     },
 
-    hide: function () {
+    hide: function() {
         geocamAware.mapG.hideKml(this.name);
     }
 
 });
 
-geocamAware.layerTypeRegistry['kml'] = function (opts) {
+geocamAware.layerTypeRegistry['kml'] = function(opts) {
     return new geocamAware.KmlLayer(opts);
 };

@@ -10,7 +10,7 @@ geocamAware.LayerManagerWidget = new Class(
 
     domId: null,
 
-    initialize: function (domId) {
+    initialize: function(domId) {
         this.domId = domId;
 
         var content = [];
@@ -18,20 +18,20 @@ geocamAware.LayerManagerWidget = new Class(
 
         content.push('<form style="margin-top: 20px;">');
         $.each(geocamAware.layerManager.layers,
-               function (i, layer) {
-                   content.push('<label>'
-                                + '<div class="geocamLayerRow">'
-                                + '<input'
-                                + ' id="geocamAwareLayerCheckbox_' + layer.name + '"'
-                                + ' type="checkbox"'
-                                + ' name="' + layer.name + '"'
-                                + ' value="' + layer.name + '"'
-                                + ' style="position:relative; top: -3px; margin-right: 10px;"'
+               function(i, layer) {
+                   content.push('<label>' +
+                                '<div class="geocamLayerRow">' +
+                                '<input' +
+                                ' id="geocamAwareLayerCheckbox_' + layer.name + '"' +
+                                ' type="checkbox"' +
+                                ' name="' + layer.name + '"' +
+                                ' value="' + layer.name + '"' +
+                                ' style="position:relative; top: -3px; margin-right: 10px;' +
                                 + '/>');
                    if (layer.selectable) {
-                       content.push('<a href="#"'
-                                    + ' id="geocamAwareLayerName_' + layer.name + '"'
-                                    + '>' + layer.name + '</a>');
+                       content.push('<a href="#"' +
+                                    ' id="geocamAwareLayerName_' + layer.name + '"' +
+                                    '>' + layer.name + '</a>');
                    } else {
                        content.push(layer.name);
                    }
@@ -43,7 +43,7 @@ geocamAware.LayerManagerWidget = new Class(
         $('#' + this.domId).html(text);
 
         $.each(geocamAware.layerManager.layers,
-               function (i, layer) {
+               function(i, layer) {
                    var checkbox = $('#geocamAwareLayerCheckbox_' + layer.name);
 
                    if (layer.visibility) {
@@ -52,13 +52,13 @@ geocamAware.LayerManagerWidget = new Class(
                        checkbox.removeAttr('checked');
                    }
 
-                   checkbox.change(function () {
+                   checkbox.change(function() {
                                        layer.setVisibility(this.checked);
                                    });
-                   
+
                    if (layer.selectable) {
                        $('#geocamAwareLayerName_' + layer.name)
-                           .click(function () {
+                           .click(function() {
                                       layer.select();
                                       return false;
                                   });
@@ -68,6 +68,6 @@ geocamAware.LayerManagerWidget = new Class(
 
 });
 
-geocamAware.LayerManagerWidget.factory = function (domId) {
+geocamAware.LayerManagerWidget.factory = function(domId) {
     return new geocamAware.LayerManagerWidget(domId);
 };

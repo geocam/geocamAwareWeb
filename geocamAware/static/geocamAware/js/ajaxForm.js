@@ -8,44 +8,44 @@ $extend(geocamAware,
 {
     ajaxFormSuccessFnG: null,
 
-    ajaxFormSubmitHandler: function (formData, jqForm, options) {
+    ajaxFormSubmitHandler: function(formData, jqForm, options) {
         // clear old errors
         var fields = jqForm.serializeArray();
         $.each(fields,
-               function (i, nameVal) {
+               function(i, nameVal) {
                    $('#' + nameVal.name + '_error').html('');
                });
 
         // notify user save is in progress
-        $('#ajaxFormEditStatus').html('<div class="pendingStatus">'
-			              + geocamAware.getLoadingIcon()
-                                      + '<span style="vertical-align: middle;">Saving your changes.</span>'
-			              + '</div>');
+        $('#ajaxFormEditStatus').html('<div class="pendingStatus">' +
+                                      geocamAware.getLoadingIcon() +
+                                      '<span style="vertical-align: middle;">Saving your changes.</span>' +
+                                      '</div>');
     },
 
-    ajaxFormResponseHandler: function (responseJson, statusText, xhr) {
+    ajaxFormResponseHandler: function(responseJson, statusText, xhr) {
         if (geocamAware.nullOrUndefined(responseJson.error)) {
-            $('#ajaxFormEditStatus').html('<div class="successStatus">'
-                                          + 'Your changes were saved.'
-                                          + '</div>');
+            $('#ajaxFormEditStatus').html('<div class="successStatus">' +
+                                          'Your changes were saved.' +
+                                          '</div>');
             if (geocamAware.ajaxFormSuccessFnG != undefined) {
                 geocamAware.ajaxFormSuccessFnG(responseJson.result);
             }
         } else {
             $('#ajaxFormEditStatus').html('<div class="errorStatus">Please correct the errors below.</div>');
             $.each(responseJson.error.data,
-                   function (name, errors) {
+                   function(name, errors) {
                        $('#' + name + '_error').html('<div class="formError">' + errors.join('<br/>') + '</div>');
                    });
         }
     },
 
-    ajaxFormErrorHandler: function (xhr, ajaxOptions, thrownError) {
-        $('#ajaxFormEditStatus').html('<div class="errorStatus">Could not save changes: '
-                                      + xhr.status + ' ' + xhr.statusText + '</div>');
+    ajaxFormErrorHandler: function(xhr, ajaxOptions, thrownError) {
+        $('#ajaxFormEditStatus').html('<div class="errorStatus">Could not save changes: ' + +
+                                      xhr.status + ' ' + xhr.statusText + '</div>');
     },
 
-    ajaxFormInit: function (domId, successFn) {
+    ajaxFormInit: function(domId, successFn) {
         // gross
         geocamAware.ajaxFormSuccessFnG = successFn;
 

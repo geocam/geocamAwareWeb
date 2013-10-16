@@ -4,14 +4,11 @@
 # All Rights Reserved.
 # __END_LICENSE__
 
-import urllib
-
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from geocamUtil import anyjson as json
-from geocamUtil.middleware.security import requestIsSecure
 from geocamUtil.auth import getAccountWidget
 
 from geocamAware import settings
@@ -67,7 +64,7 @@ JS_MODULES += [
     ("geocamAware/js/ExtentFeature.js", True),
     ("geocamAware/js/Track.js", True),
     ("geocamAware/js/Image.js", True),
-    ]
+]
 
 
 def getExportSettings():

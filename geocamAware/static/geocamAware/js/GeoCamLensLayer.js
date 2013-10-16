@@ -10,26 +10,26 @@ geocamAware.GeoCamLensLayer = new Class(
 
     selectable: true,
 
-    initialize: function (opts) {
+    initialize: function(opts) {
         this.parent(opts);
         this.setVisibility(opts.visibility);
     },
 
-    show: function () {
+    show: function() {
         geocamAware.mapG.showFeatures();
     },
 
-    hide: function () {
+    hide: function() {
         geocamAware.mapG.hideFeatures();
     },
 
-    select: function () {
+    select: function() {
         geocamAware.setToGallery();
     }
 
 });
 
 
-geocamAware.layerTypeRegistry['geocamLens'] = function (opts) {
+geocamAware.layerTypeRegistry['geocamLens'] = function(opts) {
     return new geocamAware.GeoCamLensLayer(opts);
 };

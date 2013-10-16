@@ -8,23 +8,23 @@ geocamAware.SidebarSwitcher = new Class(
 {
     Extends: geocamAware.WidgetManager,
 
-    initialize: function (domId) {
+    initialize: function(domId) {
         this.domId = domId;
 
         $('#' + this.domId).html(this.getHtml());
 
-        geocamAware.bindEvent(geocamAware, this, "selectFeature");
-        geocamAware.bindEvent(geocamAware, this, "unselectFeature");
-        geocamAware.bindEvent(geocamAware, this, "notifyLoading");
-        geocamAware.bindEvent(geocamAware, this, "updateFeatures");
-        geocamAware.bindEvent(geocamAware, this, "setToFeatureDetail");
-        geocamAware.bindEvent(geocamAware, this, "setToFeatureEdit");
-        geocamAware.bindEvent(geocamAware, this, "setToGallery");
+        geocamAware.bindEvent(geocamAware, this, 'selectFeature');
+        geocamAware.bindEvent(geocamAware, this, 'unselectFeature');
+        geocamAware.bindEvent(geocamAware, this, 'notifyLoading');
+        geocamAware.bindEvent(geocamAware, this, 'updateFeatures');
+        geocamAware.bindEvent(geocamAware, this, 'setToFeatureDetail');
+        geocamAware.bindEvent(geocamAware, this, 'setToFeatureEdit');
+        geocamAware.bindEvent(geocamAware, this, 'setToGallery');
 
         if (geocamAware.settings.GEOCAM_AWARE_USE_LAYER_MANAGER) {
             var that = this;
             $('#' + this.domId + '_layersButton')
-                .click(function () {
+                .click(function() {
                            that.setToLayers();
                            return false;
                        });
@@ -34,62 +34,62 @@ geocamAware.SidebarSwitcher = new Class(
         }
     },
 
-    getHtml: function () {
+    getHtml: function() {
         var html = [];
         if (geocamAware.settings.GEOCAM_AWARE_USE_LAYER_MANAGER) {
-            html.push('<div style="margin-top: 5px; margin-left: 5px; margin-bottom: 5px;"><a href="#" id="'
-                      + this.domId
-                      + '_layersButton">Layers</a></div>');
+            html.push('<div style="margin-top: 5px; margin-left: 5px; margin-bottom: 5px;"><a href="#" id="' +
+                      this.domId +
+                      '_layersButton">Layers</a></div>');
         }
         html.push('<div id="' + this.domId + '_content">Loading...</div>');
         return html.join('');
     },
 
-    handleViewSelect: function (node) {
+    handleViewSelect: function(node) {
         var selected = $(node).val();
         var methodName = 'setTo' + selected;
         this[methodName]();
         return false;
     },
 
-    selectFeature: function (feature) {
+    selectFeature: function(feature) {
         this.setToFeatureDetail(feature);
     },
-    
-    unselectFeature: function (feature) {
+
+    unselectFeature: function(feature) {
         this.setToGallery();
     },
 
-    notifyLoading: function () {
+    notifyLoading: function() {
         this.setToGallery();
     },
 
-    updateFeatures: function (newFeatures, diff) {
+    updateFeatures: function(newFeatures, diff) {
         // todo: if in detail view and selected feature is no longer
         // present, switch to gallery view
     },
-    
+
     /**********************************************************************
      * state and helper functions
      **********************************************************************/
 
     domId: null,
 
-    getDefaultFeature: function () {
+    getDefaultFeature: function() {
         return geocamAware.featuresByUuidG[geocamAware.selectedFeatureUuid];
     },
 
-    setToGallery: function () {
+    setToGallery: function() {
         this.setWidgetForDomId(this.domId + '_content',
                                geocamAware.GalleryWidget.factory);
     },
 
-    setToLayers: function () {
+    setToLayers: function() {
         this.setWidgetForDomId(this.domId + '_content',
                                geocamAware.LayerManagerWidget.factory);
     },
 
-    setToFeatureDetail: function (feature) {
+    setToFeatureDetail: function(feature) {
         if (feature == undefined) {
             feature = this.getDefaultFeature();
         }
@@ -98,7 +98,7 @@ geocamAware.SidebarSwitcher = new Class(
                                [feature.uuid]);
     },
 
-    setToFeatureEdit: function (feature) {
+    setToFeatureEdit: function(feature) {
         if (feature == undefined) {
             feature = this.getDefaultFeature();
         }
@@ -109,6 +109,6 @@ geocamAware.SidebarSwitcher = new Class(
 
 });
 
-geocamAware.SidebarSwitcher.factory = function (domId) {
+geocamAware.SidebarSwitcher.factory = function(domId) {
     return new geocamAware.SidebarSwitcher(domId);
 };

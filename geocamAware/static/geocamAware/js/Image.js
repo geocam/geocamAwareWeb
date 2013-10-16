@@ -8,18 +8,18 @@ geocamAware.Image = new Class(
 {
     Extends: geocamAware.PointFeature,
 
-    getThumbnailUrl: function (width) {
-        return geocamAware.getDirUrl(this) + "th" + width + ".jpg?version=" + this.version;
+    getThumbnailUrl: function(width) {
+        return geocamAware.getDirUrl(this) + 'th' + width + '.jpg?version=' + this.version;
     },
 
-    getSizePixels: function () {
+    getSizePixels: function() {
         return this.sizePixels;
     },
 
-    getCaptionHeading: function () {
-        var heading = ''
-            + '  <tr>\n'
-            + '    <td class="captionHeader">heading</td>\n';
+    getCaptionHeading: function() {
+        var heading = '' +
+            '  <tr>\n' +
+            '    <td class="captionHeader">heading</td>\n';
         if (geocamAware.nullOrUndefined(this.yaw)) {
             heading += '    <td>(unknown)</td>\n';
         } else {
@@ -33,7 +33,7 @@ geocamAware.Image = new Class(
             heading += '    <td>' + cardinal + ' ' + Math.floor(this.yaw) + '&deg; (ref. ' + ref + ')&nbsp;&nbsp;</td>\n';
         }
         heading += '  </tr>\n';
-        
+
         return heading;
     }
 

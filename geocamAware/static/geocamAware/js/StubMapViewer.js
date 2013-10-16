@@ -10,21 +10,21 @@ geocamAware.StubMapViewer = new Class(
 
     domId: null,
 
-    initialize: function (domId) {
+    initialize: function(domId) {
         this.parent(domId);
         this.domId = domId;
     },
 
-    selectFeature: function (feature) {
+    selectFeature: function(feature) {
         $('#' + this.domId).html(feature.getBalloonHtml());
     },
-    
-    unselectFeature: function (feature) {
+
+    unselectFeature: function(feature) {
         // no-op
     }
 
 });
 
-geocamAware.StubMapViewer.factory = function (domId) {
+geocamAware.StubMapViewer.factory = function(domId) {
     return new geocamAware.StubMapViewer(domId);
 };

@@ -8,7 +8,7 @@ geocamAware.ExtentFeature = new Class(
 {
     Extends: geocamAware.Feature,
 
-    getMaxTime: function () {
+    getMaxTime: function() {
         return this.maxTime;
     }
 

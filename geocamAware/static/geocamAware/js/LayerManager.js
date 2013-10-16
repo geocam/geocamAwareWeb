@@ -6,13 +6,13 @@
 
 geocamAware.LayerManager = new Class(
 {
-    initialize: function () {
+    initialize: function() {
         this.layers = [];
         this.layerLookup = {};
         var that = this;
 
         $.each(geocamAware.settings.GEOCAM_AWARE_LAYERS,
-               function (i, layerOpts) {
+               function(i, layerOpts) {
                    var factory = geocamAware.layerTypeRegistry[layerOpts.type];
                    var layer = factory(layerOpts);
                    that.layers.push(layer);

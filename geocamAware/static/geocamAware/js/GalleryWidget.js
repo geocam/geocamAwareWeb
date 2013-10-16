@@ -10,40 +10,40 @@ geocamAware.GalleryWidget = new Class(
 
     page: null,
 
-    initialize: function (domId) {
+    initialize: function(domId) {
         this.domId = domId;
         geocamAware.galleryG = this;
 
-        $("#" + this.domId).html
+        $('#' + this.domId).html;
           ('<div id="geocamAware_gallery"></div>\n' +
            '<div id="geocamAware_galleryCaption"></div>\n');
 
         if (geocamAware.visibleFeaturesG !== null) {
             this.notifyFeaturesInMapViewport(geocamAware.visibleFeaturesG);
         } else {
-            $("#geocamAware_gallery").html(geocamAware.getPendingStatusHtml('Loading...'));
+            $('#geocamAware_gallery').html(geocamAware.getPendingStatusHtml('Loading...'));
         }
 
-        $(geocamAware).bind("error", function (object, shortMessage, longMessage) {
-            $("#geocamAware_gallery").html(longMessage);
+        $(geocamAware).bind('error', function(object, shortMessage, longMessage) {
+            $('#geocamAware_gallery').html(longMessage);
         });
 
-        geocamAware.bindEvent(geocamAware, this, "highlightFeature");
-        geocamAware.bindEvent(geocamAware, this, "unhighlightFeature");
-        geocamAware.bindEvent(geocamAware, this, "notifyLoading");
-        geocamAware.bindEvent(geocamAware, this, "notifySearchComplete");
-        geocamAware.bindEvent(geocamAware, this, "notifyFeaturesInMapViewport");
+        geocamAware.bindEvent(geocamAware, this, 'highlightFeature');
+        geocamAware.bindEvent(geocamAware, this, 'unhighlightFeature');
+        geocamAware.bindEvent(geocamAware, this, 'notifyLoading');
+        geocamAware.bindEvent(geocamAware, this, 'notifySearchComplete');
+        geocamAware.bindEvent(geocamAware, this, 'notifyFeaturesInMapViewport');
     },
 
-    notifyLoading: function () {
-        $("#geocamAware_gallery").html(geocamAware.getPendingStatusHtml('Searching...'));
+    notifyLoading: function() {
+        $('#geocamAware_gallery').html(geocamAware.getPendingStatusHtml('Searching...'));
     },
 
-    notifySearchComplete: function () {
+    notifySearchComplete: function() {
         this.notifyFeaturesInMapViewport(geocamAware.visibleFeaturesG);
     },
 
-    notifyFeaturesInMapViewport: function (visibleFeatures) {
+    notifyFeaturesInMapViewport: function(visibleFeatures) {
         var pageNum;
         var viewIndexFeature = geocamAware.featuresByUuidG[geocamAware.viewIndexUuidG];
         if (viewIndexFeature == undefined) {
@@ -54,64 +54,64 @@ geocamAware.GalleryWidget = new Class(
         this.renderPage(visibleFeatures, pageNum);
     },
 
-    highlightFeature: function (feature) {
+    highlightFeature: function(feature) {
         this.setPage(this.getFeaturePage(feature, geocamAware.visibleFeaturesG));
-        $("#galleryDiv_" + feature.uuid).addClass("highlighted");
-	
+        $('#galleryDiv_' + feature.uuid).addClass('highlighted');
+
         // add the rest of the preview data
-        $("#geocamAware_galleryCaption").html(feature.getCaptionHtml());
+        $('#geocamAware_galleryCaption').html(feature.getCaptionHtml());
     },
-    
-    unhighlightFeature: function (feature) {
-        $("#galleryDiv_" + feature.uuid).removeClass("highlighted");
-	
-        $("#geocamAware_galleryCaption").html('');
+
+    unhighlightFeature: function(feature) {
+        $('#galleryDiv_' + feature.uuid).removeClass('highlighted');
+
+        $('#geocamAware_galleryCaption').html('');
     },
-    
-    getNumPages: function (numFeatures) {
-        var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
+
+    getNumPages: function(numFeatures) {
+        var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS * geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
         return Math.ceil(numFeatures / pageSize);
     },
 
-    getIndex: function (page, row, col) {
-        return ((page-1)*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS + row)*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS + col;
+    getIndex: function(page, row, col) {
+        return ((page - 1) * geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS + row) * geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS + col;
     },
 
-    getGalleryHtml: function (features, pageNum) {
-        html = "<table style=\"margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; background-color: #ddd;\">";
+    getGalleryHtml: function(features, pageNum) {
+        html = '<table style=\"margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; background-color: #ddd;\">';
         html += '<tr><td colspan="3">';
-        html += geocamAware.getPagerHtml
+        html += geocamAware.getPagerHtml;
           (this.getNumPages(features.length),
            pageNum,
-           function (pageNum) {
+           function(pageNum) {
                return 'javascript:geocamAware.galleryG.setPage(' + pageNum + ')';
            });
         //html += '<div style="float: right;">Hide</div>';
         html += '</td></tr>';
-        for (var r=0; r < geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS; r++) {
-	    html += "<tr>";
-	    for (var c=0; c < geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS; c++) {
-	        var i = this.getIndex(pageNum, r, c);
-	        if (i < features.length) {
-		    var feature = features[i];
-		    html += feature.getGalleryThumbHtml();
-	        }
-	    }
-	    html += "</tr>";
+        for (var r = 0; r < geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS; r++) {
+            html += '<tr>';
+            for (var c = 0; c < geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS; c++) {
+                var i = this.getIndex(pageNum, r, c);
+                if (i < features.length) {
+                    var feature = features[i];
+                    html += feature.getGalleryThumbHtml();
+                }
+            }
+            html += '</tr>';
         }
-        html += "</table>";
+        html += '</table>';
         return html;
     },
-    
-    getFeaturePage: function (feature, visibleFeatures) {
+
+    getFeaturePage: function(feature, visibleFeatures) {
         // get the page that this feature appears on among the
         // visible features -- we use this to set the page before
         // we try to highlight the feature in the gallery
-        var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
+        var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS * geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
         return Math.floor(feature.visibleIndex / pageSize) + 1;
     },
 
-    setPage: function (pageNum) {
+    setPage: function(pageNum) {
         if (this.page != pageNum) {
             this.renderPage(geocamAware.visibleFeaturesG, pageNum);
 
@@ -121,28 +121,28 @@ geocamAware.GalleryWidget = new Class(
         }
     },
 
-    renderPage: function (visibleFeatures, pageNum) {
+    renderPage: function(visibleFeatures, pageNum) {
         if (visibleFeatures.length === 0) {
             if (geocamAware.featuresG.length === 0) {
-                if (geocamAware.queryG === "") {
-                    $("#geocamAware_gallery").html("No features in DB yet.");
+                if (geocamAware.queryG === '') {
+                    $('#geocamAware_gallery').html('No features in DB yet.');
                 } else {
-                    $("#geocamAware_gallery").html("No matches found.");
+                    $('#geocamAware_gallery').html('No matches found.');
                 }
             } else {
-                $("#geocamAware_gallery").html("No matching features within map viewport.  Try zoom to fit.");
+                $('#geocamAware_gallery').html('No matching features within map viewport.  Try zoom to fit.');
             }
         } else {
             // set gallery html
-            $("#geocamAware_gallery").html(this.getGalleryHtml(visibleFeatures, pageNum));
-            
+            $('#geocamAware_gallery').html(this.getGalleryHtml(visibleFeatures, pageNum));
+
             // set gallery listeners
-            var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS*geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
-            for (var j=0; j < pageSize; j++) {
-                var i = (pageNum-1)*pageSize + j;
+            var pageSize = geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_ROWS * geocamAware.settings.GEOCAM_AWARE_GALLERY_PAGE_COLS;
+            for (var j = 0; j < pageSize; j++) {
+                var i = (pageNum - 1) * pageSize + j;
                 if (i < visibleFeatures.length) {
                     var feature = visibleFeatures[i];
-                    var td = $("#galleryTd_" + feature.uuid);
+                    var td = $('#galleryTd_' + feature.uuid);
                     td.hover(
                         function(uuid) {
                             return function() {
@@ -165,12 +165,12 @@ geocamAware.GalleryWidget = new Class(
                 }
             }
         }
-        
+
         this.page = pageNum;
     }
-    
+
 });
 
-geocamAware.GalleryWidget.factory = function (domId) {
+geocamAware.GalleryWidget.factory = function(domId) {
     return new geocamAware.GalleryWidget(domId);
 };

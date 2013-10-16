@@ -15,24 +15,24 @@ geocamAware.Layer = new Class(
     // set to true if this layer has a sidebar widget
     selectable: false,
 
-    initialize: function (opts) {
+    initialize: function(opts) {
         this.name = opts.name;
         this.type = opts.type;
     },
 
-    show: function () {
+    show: function() {
         // show the layer -- override in subclass
     },
 
-    hide: function () {
+    hide: function() {
         // hide the layer -- override in subclass
     },
 
-    select: function () {
+    select: function() {
         // switch sidebar to the widget for this layer -- override in subclass
     },
 
-    setVisibility: function (newVisibility) {
+    setVisibility: function(newVisibility) {
         if (this.visibility != newVisibility) {
             if (newVisibility) {
                 this.show();

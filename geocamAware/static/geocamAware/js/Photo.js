@@ -8,21 +8,21 @@ geocamAware.Photo = new Class(
 {
     Extends: geocamAware.Image,
 
-    getCaptionUsng: function () {
-        var usng = ''
-            + '  <tr>\n'
-            + '    <td class="captionHeader">usng</td>\n';
+    getCaptionUsng: function() {
+        var usng = '' +
+            '  <tr>\n' +
+            '    <td class="captionHeader">usng</td>\n';
         if (geocamAware.nullOrUndefined(this.latitude)) {
             usng += '    <td>(unknown)</td>\n';
         } else {
             usng += '    <td>' + LLtoUSNG(this.latitude, this.longitude, 5) + '&nbsp;&nbsp;</td>\n';
         }
         usng += '  </tr>\n';
-        
+
         return usng;
     },
 
-    getCaptionLatLon: function () {
+    getCaptionLatLon: function() {
         var standardFormat = this.parent();
         var usngFormat = this.getCaptionUsng();
         return standardFormat + usngFormat;

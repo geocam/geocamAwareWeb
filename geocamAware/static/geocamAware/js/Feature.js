@@ -7,11 +7,11 @@
 geocamAware.Feature = new Class(
 {
 
-    initialize: function (opts) {
+    initialize: function(opts) {
         $extend(this, opts);
     },
 
-    getThumbSize: function (constraint) {
+    getThumbSize: function(constraint) {
         /* return the right size of thumbnail to fit snugly in the
            constraint box, preserving the aspect ratio of the full size
            image */
@@ -26,165 +26,165 @@ geocamAware.Feature = new Class(
         }
     },
 
-    getDetailImageHtml: function () {
+    getDetailImageHtml: function() {
         var w0 = geocamAware.settings.GEOCAM_AWARE_DESC_THUMB_SIZE[0];
         var thumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_AWARE_DESC_THUMB_SIZE);
-        return ''
-            + '<a href="' + this.getViewerUrl() + '?tempWindow=1"\n'
-            + '   target="_blank"\n'
-            + '   title="View full-res image">\n'
-	    + '  <img'
-	    + '    src="' + this.getIconGalleryUrl()  + '"'
-	    + '    width="32"'
-	    + '    height="32"'
-	    + '    style="border-width: 0px; position: absolute; z-index: 100;"'
-	    + '  />'
-            + '  <img\n'
-            + '    src="' + this.getThumbnailUrl(w0) + '"\n'
-            + '    width="' + thumbSize[0] + '"\n'
-            + '    height="' + thumbSize[1] + '"\n'
-            + '    border="0"'
-            + '  />\n'
-            + '</a>\n';
+        return '' +
+            '<a href="' + this.getViewerUrl() + '?tempWindow=1"\n' +
+            '   target="_blank"\n' +
+            '   title="View full-res image">\n' +
+            '  <img' +
+            '    src="' + this.getIconGalleryUrl() + '"' +
+            '    width="32"' +
+            '    height="32"' +
+            '    style="border-width: 0px; position: absolute; z-index: 100;"' +
+            '  />' +
+            '  <img\n' +
+            '    src="' + this.getThumbnailUrl(w0) + '"\n' +
+            '    width="' + thumbSize[0] + '"\n' +
+            '    height="' + thumbSize[1] + '"\n' +
+            '    border="0"' +
+            '  />\n' +
+            '</a>\n';
     },
 
-    getFullResLinkHtml: function () {
-        return ''
-            + '  <div style="margin-top: 10px;"><a href="' + this.getViewerUrl() + '?tempWindow=1" target="_blank">\n'
-            + '    View full-res image'
-            + '  </a></div>\n';
+    getFullResLinkHtml: function() {
+        return '' +
+            '  <div style="margin-top: 10px;"><a href="' + this.getViewerUrl() + '?tempWindow=1" target="_blank">\n' +
+            '    View full-res image' +
+            '  </a></div>\n';
     },
 
-    getEditLinkHtml: function () {
-        return ''
-            + '  <div style="margin-top: 10px;">\n'
-            + '    <a id="featureEditLink" href="' + this.getEditUrl() + '" target="_blank">\n'
-            + '      Edit photo information'
-            + '    </a>\n'
-            + '  </div>\n';
+    getEditLinkHtml: function() {
+        return '' +
+            '  <div style="margin-top: 10px;">\n' +
+            '    <a id="featureEditLink" href="' + this.getEditUrl() + '" target="_blank">\n' +
+            '      Edit photo information' +
+            '    </a>\n' +
+            '  </div>\n';
     },
 
-    getDetailLinksHtml: function () {
+    getDetailLinksHtml: function() {
         return this.getFullResLinkHtml() + this.getEditLinkHtml();
     },
 
-    getBalloonHtml: function () {
-        return ''
-            + '<div>\n'
-            + '  ' + this.getDetailImageHtml()
-            + '  ' + this.getCaptionHtml()
-            + '  ' + this.getDetailLinksHtml()
-            + '</div>\n';
+    getBalloonHtml: function() {
+        return '' +
+            '<div>\n' +
+            '  ' + this.getDetailImageHtml() +
+            '  ' + this.getCaptionHtml() +
+            '  ' + this.getDetailLinksHtml() +
+            '</div>\n';
     },
-    
-    getGalleryThumbHtml: function () {
+
+    getGalleryThumbHtml: function() {
         var w0 = geocamAware.settings.GEOCAM_AWARE_GALLERY_THUMB_SIZE[0];
         var h0 = geocamAware.settings.GEOCAM_AWARE_GALLERY_THUMB_SIZE[1];
         var galThumbSize = this.getThumbSize(geocamAware.settings.GEOCAM_AWARE_GALLERY_THUMB_SIZE);
         var tw = galThumbSize[0];
         var th = galThumbSize[1];
-        return "<td"
-	    + " id=\"galleryTd_" + this.uuid + "\""
-	    + " style=\""
-	    + " vertical-align: top;"
-	    + " width: " + (w0+10) + "px;"
-	    + " height: " + (h0+10) + "px;"
-	    + " margin: 0px 0px 0px 0px;"
-	    + " border: 0px 0px 0px 0px;"
-	    + " padding: 0px 0px 0px 0px;"
-	    + "\">"
-	    + "<div"
-            + " id=\"galleryDiv_" + this.uuid + "\""
-            + " class=\"geocamAwareGalleryDiv\""
-	    + " style=\""
-	    + " width: " + tw + "px;"
-	    + " height: " + th + "px;"
-	    + "\">"
-	    + "<img"
-	    + " src=\"" + this.getIconGalleryUrl()  + "\""
-	    + " width=\"16\""
-	    + " height=\"16\""
-	    + " style=\"position: absolute; z-index: 100;\""
-	    + "/>"
-	    + "<img"
-	    + " src=\"" + this.getThumbnailUrl(w0) + "\""
-	    + " width=\"" + tw + "\""
-	    + " height=\"" + th + "\""
-	    + "/>"
-	    + "</div>"
-	    + "</td>";
+        return '<td' +
+            ' id=\"galleryTd_' + this.uuid + '\"' +
+            ' style=\"' +
+            ' vertical-align: top;' +
+            ' width: ' + (w0 + 10) + 'px;' +
+            ' height: ' + (h0 + 10) + 'px;' +
+            ' margin: 0px 0px 0px 0px;' +
+            ' border: 0px 0px 0px 0px;' +
+            ' padding: 0px 0px 0px 0px;' +
+            '\">' +
+            '<div' +
+            ' id=\"galleryDiv_' + this.uuid + '\"' +
+            ' class=\"geocamAwareGalleryDiv\"' +
+            ' style=\"' +
+            ' width: ' + tw + 'px;' +
+            ' height: ' + th + 'px;' +
+            '\">' +
+            '<img' +
+            ' src=\"' + this.getIconGalleryUrl() + '\"' +
+            ' width=\"16\"' +
+            ' height=\"16\"' +
+            ' style=\"position: absolute; z-index: 100;\"' +
+            '/>' +
+            '<img' +
+            ' src=\"' + this.getThumbnailUrl(w0) + '\"' +
+            ' width=\"' + tw + '\"' +
+            ' height=\"' + th + '\"' +
+            '/>' +
+            '</div>' +
+            '</td>';
     },
-    
-    getIconGalleryUrl: function () {
+
+    getIconGalleryUrl: function() {
         return this.icon.normal.url;
     },
-    
-    getIconMapUrl: function () {
+
+    getIconMapUrl: function() {
         return this.pointIcon.normal.url;
     },
-    
-    getIconMapRotUrl: function () {
+
+    getIconMapRotUrl: function() {
         return this.rotatedIcon.normal.url;
     },
 
-    getCaptionNotes: function () {
+    getCaptionNotes: function() {
         if (geocamAware.nullOrUndefined(this.notes)) {
-            return ''
-                + '  <tr>\n'
-                + '    <td colspan="2" style="font-size: 1.5em; color: #999;">(no notes)</td>\n'
-                + '  </tr>\n';
+            return '' +
+                '  <tr>\n' +
+                '    <td colspan="2" style="font-size: 1.5em; color: #999;">(no notes)</td>\n' +
+                '  </tr>\n';
         } else {
-            return ''
-                + '  <tr>\n'
-                + '    <td colspan="2" style="font-size: 1.5em;">' + this.notes + '</td>\n'
-                + '  </tr>\n';
+            return '' +
+                '  <tr>\n' +
+                '    <td colspan="2" style="font-size: 1.5em;">' + this.notes + '</td>\n' +
+                '  </tr>\n';
         }
     },
-    
-    getCaptionTags: function () {
+
+    getCaptionTags: function() {
         var tags = '  <tr>\n';
         if (this.tags === '') {
             tags += '    <td colspan="2" style="color: #777">(no tags)</td>';
         } else {
             tags += '    <td colspan="2">';
             $.each(this.tags,
-                   function (i, tag) {
+                   function(i, tag) {
                        tags += '#' + tag + ' &nbsp;';
                    });
             tags += '    </td>\n';
         }
         tags += '  </tr>\n';
-        
+
         return tags;
     },
 
-    getCaptionMisc: function () {
+    getCaptionMisc: function() {
         var maxTime = this.getMaxTime();
-        
+
         // timeShort, author, name
-        return ''
-            + '  <tr>\n'
-            + '    <td style="padding-top: 10px; padding-bottom: 10px;" colspan="2">'
-            + '      <span style="color: #007; font-weight: bold; margin-right: 10px;">' + getTimeShort(maxTime) + '</span>\n'
-            + '      <span style="margin-right: 10px;">' + this.author.displayName + '</span>\n'
-            + '      <span>' + this.name + '</span>\n'
-            + '    </td>\n'
-            + '  </tr>\n';
+        return '' +
+            '  <tr>\n' +
+            '    <td style="padding-top: 10px; padding-bottom: 10px;" colspan="2">' +
+            '      <span style="color: #007; font-weight: bold; margin-right: 10px;">' + gTimeShort(maxTime) + '</span>\n' +
+            '      <span style="margin-right: 10px;">' + this.author.displayName + '</sp>\n' +
+            '      <span>' + this.name + '</span>\n' +
+            '    </td>\n' +
+            '  </tr>\n';
     },
 
-    getCaptionTimePrecise: function () {
+    getCaptionTimePrecise: function() {
         var maxTime = this.getMaxTime();
-        return ''
-            + '  <tr>\n'
-            + '    <td class="captionHeader">time</td>\n'
-            + '    <td>' + getTimePrecise(maxTime) + '</td>\n'
-            + '  </tr>\n';
+        return '' +
+            '  <tr>\n' +
+            '    <td class="captionHeader">time</td>\n' +
+            '    <td>' + getTimePrecise(maxTime) + '</td>\n' +
+            '  </tr>\n';
     },
 
-    getCaptionHtml: function () {
-        caption = ''
-            + '<table>\n';
-        
+    getCaptionHtml: function() {
+        caption = '' +
+            '<table>\n';
+
         caption += this.getCaptionNotes();
         caption += this.getCaptionTags();
         caption += this.getCaptionMisc(); // relative time, author, name
@@ -198,16 +198,16 @@ geocamAware.Feature = new Class(
             caption += this.getCaptionHeading();
         }
         caption += this.getCaptionTimePrecise();
-        
+
         caption += '</table>\n';
         return caption;
     },
 
-    getViewerUrl: function () {
+    getViewerUrl: function() {
         return this.viewerUrl;
     },
 
-    getEditUrl: function () {
+    getEditUrl: function() {
         return this.editUrl;
     }
 

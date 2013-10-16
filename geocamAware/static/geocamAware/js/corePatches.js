@@ -4,7 +4,7 @@
 // All Rights Reserved.
 // __END_LICENSE__
 
-geocamAware.getDirUrl = function (feature) {
+geocamAware.getDirUrl = function(feature) {
     ret = geocamAware.settings.DATA_URL + feature.subtype.toLowerCase() + '/';
     var idStr = feature.localId + 'p';
     for (var i = 0; i < idStr.length; i += 2) {
@@ -13,6 +13,6 @@ geocamAware.getDirUrl = function (feature) {
         }
         ret += idStr.substr(i, 2);
     }
-    ret += "/" + feature.version + "/";
+    ret += '/' + feature.version + '/';
     return ret;
 };

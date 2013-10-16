@@ -7,9 +7,9 @@
 geocamAware.Widget = new Class(
 {
     // functions to implement in derived classes
-    
-    initialize: function (domId) {
+
+    initialize: function(domId) {
     }
-    
+
 });
 
